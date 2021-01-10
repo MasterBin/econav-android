@@ -1,0 +1,6 @@
+rootProject.name = "econav-android"
+include ':app'
+include ':core:common'
+include ':features:mapscreen'
+include ':features:extended-lifecycle:api'
+include ':features:extended-lifecycle:impl'
