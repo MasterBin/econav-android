@@ -1,16 +1,13 @@
 package ru.nk.econav.android
 
-import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import com.arkivanov.decompose.extensions.android.RouterView
 import com.arkivanov.decompose.extensions.android.ViewContext
 import com.arkivanov.decompose.extensions.android.context
-import ru.nk.econav.android.map.MainMap
 import ru.nk.econav.android.map.MainMapView
-import ru.nk.econav.extended_lifecycle.ExtendedLifecycle
 
-fun ViewContext.rootView(model : RootContainer.Model) : View {
+fun ViewContext.rootView(model: RootContainer): View {
 
     val root = RouterView(context).apply {
         layoutParams = FrameLayout.LayoutParams(
@@ -19,12 +16,16 @@ fun ViewContext.rootView(model : RootContainer.Model) : View {
         )
     }
 
-    root.children(model.child, lifecycle) { parent, child, configuration ->
+    root.children(model.routerState, lifecycle) { parent, child, configuration ->
         parent.removeAllViews()
-        when(configuration.screen) {
-            RootContainer.Screens.INTRO -> TODO()
-            RootContainer.Screens.MAINMAP -> parent.addView(MainMapView((child as MainMap).model))
-        }
+        parent.addView(
+            when (child) {
+                is RootContainer.Child.Map -> MainMapView(
+                    child.component.model,
+                    child.component.lifecycleExtension
+                )
+            }
+        )
     }
 
     return root

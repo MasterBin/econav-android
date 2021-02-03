@@ -2,6 +2,7 @@ package ru.nk.econav.android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.backpressed.toBackPressedDispatcher
 import com.arkivanov.decompose.extensions.android.DefaultViewContext
@@ -9,8 +10,12 @@ import com.arkivanov.decompose.extensions.android.child
 import com.arkivanov.decompose.instancekeeper.toInstanceKeeper
 import com.arkivanov.decompose.lifecycle.asDecomposeLifecycle
 import com.arkivanov.decompose.statekeeper.toStateKeeper
+import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
+import ru.nk.econav.android.map.PathRepository
+import ru.nk.econav.android.map.PathRepositoryImpl
+import ru.nk.econav.extended_lifecycle.LifecycleExtension
 import ru.nk.econav.extended_lifecycle.LifecycleExtensionImpl
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             backPressedDispatcher = onBackPressedDispatcher.toBackPressedDispatcher()
         )
 
-        val root = RootContainer(componentContext)
+        val root = createRoot(componentContext)
 
         val viewContext = DefaultViewContext(
             parent = findViewById(R.id.root),
@@ -41,10 +46,19 @@ class MainActivity : AppCompatActivity() {
 
         viewContext.apply {
             child(parent) {
-                rootView(root.model)
+                rootView(root)
             }
         }
     }
+
+    private fun createRoot(componentContext: ComponentContext) =
+        RootContainer(
+            componentContext,
+            dependencies = object : RootContainer.Dependencies {
+                override val pathRepository: PathRepository = getKoin().get()
+                override val lifecycleExtension: LifecycleExtension = getKoin().get()
+            }
+        )
 
     override fun onLowMemory() {
         super.onLowMemory()

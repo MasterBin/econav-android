@@ -3,16 +3,17 @@ plugins {
 }
 
 buildscript {
-    val kotlinVersion by extra( "1.4.21")
+    val kotlinVersion by extra(Vers.KOTLIN)
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.1")
+        classpath("com.android.tools.build:gradle:4.1.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.google.gms:google-services:4.3.4")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.3.0")
+        classpath("com.google.gms:google-services:4.3.5")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.4.1")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
     }
 }
 

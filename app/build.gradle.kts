@@ -7,6 +7,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("kotlin-android-extensions")
+    kotlin("plugin.serialization")
 //    id("com.google.firebase.crashlytics")
 //    id("com.google.gms.google-services")
 }
@@ -93,6 +94,16 @@ dependencies {
     implementation(Deps.coil)
 
     implementation(Deps.GooglePlay.maps)
+    implementation(Deps.GooglePlay.mapUtils)
+    implementation(Deps.GooglePlay.mapsKtx)
+    implementation(Deps.GooglePlay.mapUtilsKtx)
+
+    implementation(Deps.retrofit)
+    implementation(Deps.okHttp)
+    implementation(Deps.okHttpLoggingInterceptor)
+
+    implementation(Deps.kotlinSerializationConverter)
+    implementation(Deps.kotlinSerialization)
 
     testImplementation(Deps.Testing.junit)
     "leakCanaryImplementation"(Deps.Testing.leakCanary)

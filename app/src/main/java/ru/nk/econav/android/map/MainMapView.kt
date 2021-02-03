@@ -1,17 +1,16 @@
 package ru.nk.econav.android.map
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import com.arkivanov.decompose.extensions.android.ViewContext
 import com.arkivanov.decompose.extensions.android.layoutInflater
-import com.arkivanov.decompose.value.ObserveLifecycleMode
-import com.arkivanov.decompose.value.observe
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.gms.maps.model.TileOverlayOptions
-import org.koin.java.KoinJavaComponent.getKoin
+import com.google.maps.android.PolyUtil
+import com.google.maps.android.ktx.addMarker
+import com.google.maps.android.ktx.addPolyline
+import com.google.maps.android.ktx.model.cameraPosition
 import ru.nk.econav.android.databinding.ViewMainMapBinding
 import ru.nk.econav.extended_lifecycle.ExtendedLifecycle
 import ru.nk.econav.extended_lifecycle.LifecycleExtension
@@ -20,31 +19,85 @@ import ru.nk.econav.extended_lifecycle.subscribe
 
 @Suppress("functionName")
 fun ViewContext.MainMapView(
-    model: MainMap.Model
+    model: MainMap.Model,
+    lifecycleExtension: LifecycleExtension
 ): View {
-    val lifecycleExtension: LifecycleExtension = getKoin().get()
+
     val vb = ViewMainMapBinding.inflate(layoutInflater)
 
     lifecycle.extended(lifecycleExtension).handleLifecycle(vb.mapView)
 
-//    model.data.observe(lifecycle) {
-//        vb.text.text = it.text
-//    }
+    vb.mapView.getMapAsync { map ->
+        model.data.subscribe {
+            when (it.state) {
+                MainMap.State.None -> {
+                    map.clear()
+                }
+                MainMap.State.Some -> {
+                    if (it.startPoint != null) {
+                        map.addMarker {
+                            position(it.startPoint)
+                            title("Start")
+                        }
+                    }
+                    if (it.endPoint != null) {
+                        map.addMarker {
+                            position(it.endPoint)
+                            title("End")
+                        }
+                    }
+                }
+                MainMap.State.LoadingPath -> {
 
-    vb.mapView.getMapAsync {
-        it.addMarker(MarkerOptions().apply {
-            position(LatLng(55.754079, 37.618879))
-        }).apply {
-            model.data.observe(lifecycle) {
-                title = it.text
-                this.showInfoWindow()
+                }
+                is MainMap.State.PathLoaded -> {
+                    val f = it.state.formattedPath.map {
+                        PolyUtil.decode(it)
+                    }.apply {
+                        forEachIndexed { index, it ->
+                            map.addPolyline {
+                                addAll(it)
+                                color(when(index % 6) {
+                                    0 -> Color.BLACK
+                                    1 -> Color.BLUE
+                                    2 -> Color.GREEN
+                                    3 -> Color.RED
+                                    4 -> Color.YELLOW
+                                    else -> Color.MAGENTA
+                                })
+                            }
+                        }
+                    }
+
+                    map.animateCamera(
+                        CameraUpdateFactory
+                            .newCameraPosition(cameraPosition {
+                                target(f[0][0])
+                                zoom(12f)
+                            })
+                    )
+                }
+            }
+        }
+
+        map.setOnMapLongClickListener { ll ->
+            model.data.value.let {
+                if (it.state != MainMap.State.LoadingPath) {
+                    when {
+                        it.startPoint == null -> {
+                            model.setStartPoint(ll)
+                        }
+                        it.endPoint == null -> {
+                            model.setEndPoint(ll)
+                        }
+                        else -> {
+                            model.clearAll()
+                        }
+                    }
+                }
             }
 
         }
-
-        it.addPolyline(PolylineOptions().apply {
-
-        })
     }
 
     return vb.root

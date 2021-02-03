@@ -9,6 +9,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.decompose.value.reduce
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,53 +19,77 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import org.koin.core.Koin
+import org.koin.core.context.KoinContext
+import org.koin.java.KoinJavaComponent.inject
 import ru.nk.econav.android.RootContainer
 import ru.nk.econav.android.map.MainMap.Data
 import ru.nk.econav.android.map.MainMap.Model
 
-fun MainMap(componentContext: ComponentContext) : MainMap =
-    MainMapImpl(componentContext)
+
 
 internal class MainMapImpl(
     componentContext : ComponentContext,
-
-) : MainMap, ComponentContext by componentContext {
+    dependencies: MainMap.Dependencies
+) : MainMap, ComponentContext by componentContext, MainMap.Dependencies by dependencies {
 
     private val handler = instanceKeeper.getOrCreate("Handler") {
-        Handler(stateKeeper.consume<State>("State") ?: State())
-    }
-
-    init {
-        stateKeeper.register("State") { handler.state.value }
+        Handler(MainMap.Data())
     }
 
     override val model: Model =
-        object : Model {
-            override val data: Value<Data> = handler.state.map { Data("$it +++") }
+        object : Model, MainMap.Events by handler{
+            override val data: Value<Data> = handler.state
         }
 
-    inner class Handler(initialState : State = State()) : InstanceKeeper.Instance {
+    inner class Handler(initialState : MainMap.Data) : InstanceKeeper.Instance, MainMap.Events {
+
         val state = MutableValue(initialState)
         private val scopes = CoroutineScope(Dispatchers.Main)
-
-        init {
-            scopes.launch {
-                ticker(1000, 0)
-                    .consumeAsFlow()
-                    .flowOn(Dispatchers.Default)
-                    .collect { res ->
-                        state.reduce { it.copy(value = it.value + 1) }
-                    }
-            }
-        }
 
         override fun onDestroy() {
             scopes.cancel()
         }
-    }
 
-    @Parcelize
-    data class State(
-        val value: Int = 0
-    ) : Parcelable
+        override fun setStartPoint(latLng: LatLng) {
+            state.reduce {
+                it.copy(
+                    startPoint = latLng,
+                    state = MainMap.State.Some
+                )
+            }
+        }
+
+        override fun setEndPoint(latLng: LatLng) {
+            if (state.value.state is MainMap.State.Some) {
+                state.reduce {
+                    it.copy(
+                        endPoint = latLng,
+                        state = MainMap.State.LoadingPath
+                    )
+                }
+
+                scopes.launch {
+                    pathRepository.getPath(state.value.startPoint!!, state.value.endPoint!!)
+                        .collect { res ->
+                            state.reduce {
+                                it.copy(
+                                    state = MainMap.State.PathLoaded(res)
+                                )
+                            }
+                        }
+                }
+            }
+        }
+
+        override fun clearAll() {
+            state.reduce {
+                it.copy(
+                    startPoint = null,
+                    endPoint = null,
+                    state = MainMap.State.None
+                )
+            }
+        }
+    }
 }

@@ -43,9 +43,11 @@ object Deps {
     const val mviKotlinRx = "com.arkivanov.mvikotlin:rx:${Vers.MVIKOTLIN}"
 
     const val retrofit = "com.squareup.retrofit2:retrofit:${Vers.RETROFIT}"
+    const val okHttp = "com.squareup.okhttp3:okhttp:${Vers.OKHTTP}"
     const val okHttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Vers.OKHTTP}"
-    const val gsonConverter = "com.squareup.retrofit2:converter-gson:${Vers.RETROFIT}"
-    const val retrofitRxjavaAdapter = "com.squareup.retrofit2:adapter-rxjava2:${Vers.RETROFIT}"
+    const val kotlinSerializationConverter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+
+    const val kotlinSerialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Vers.KOTLIN_SERIALIZATION}"
 
     const val osm = "org.osmdroid:osmdroid-android:${Vers.OSM}"
 
@@ -73,8 +75,8 @@ object Deps {
     }
 
     object Decompose {
-        const val decomposeCommon = "com.arkivanov.decompose:decompose:0.1.5"
-        const val decomposeAndroidExt = "com.arkivanov.decompose:extensions-android:0.1.5"
+        const val decomposeCommon = "com.arkivanov.decompose:decompose:${Vers.DECOMPOSE}"
+        const val decomposeAndroidExt = "com.arkivanov.decompose:extensions-android:${Vers.DECOMPOSE}"
     }
 }
 
