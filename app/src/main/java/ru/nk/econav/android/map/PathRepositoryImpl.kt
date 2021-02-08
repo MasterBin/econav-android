@@ -10,7 +10,7 @@ class PathRepositoryImpl(
     private val api: Api
 ) : PathRepository {
 
-    override fun getPath(start: LatLng, end: LatLng): Flow<List<String>> {
+    override fun getPath(start: LatLng, end: LatLng): Flow<RouteResponse> {
         return flow {
             emit(
                 api.getPath(

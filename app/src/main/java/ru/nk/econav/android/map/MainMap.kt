@@ -36,7 +36,7 @@ interface MainMap {
         object None : State()
         object Some : State()
         object LoadingPath : State()
-        data class PathLoaded(val formattedPath : List<String>) : State()
+        data class PathLoaded(val formattedPath : String) : State()
     }
 }
 

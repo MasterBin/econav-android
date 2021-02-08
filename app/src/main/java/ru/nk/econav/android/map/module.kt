@@ -27,6 +27,7 @@ val testModule = module {
             }
         }
             .readTimeout(1, TimeUnit.HOURS)
+            .retryOnConnectionFailure(false)
             .build()
     }
 

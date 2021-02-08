@@ -10,5 +10,5 @@ import retrofit2.http.POST
 interface Api {
 
     @POST("/route")
-    suspend fun getPath(@Body rq : RouteRequest) : List<String>
+    suspend fun getPath(@Body rq : RouteRequest) : RouteResponse
 }

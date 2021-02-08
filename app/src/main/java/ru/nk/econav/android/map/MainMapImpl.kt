@@ -74,7 +74,7 @@ internal class MainMapImpl(
                         .collect { res ->
                             state.reduce {
                                 it.copy(
-                                    state = MainMap.State.PathLoaded(res)
+                                    state = MainMap.State.PathLoaded(res.encodedRoute)
                                 )
                             }
                         }

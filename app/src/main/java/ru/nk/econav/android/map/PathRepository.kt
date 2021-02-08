@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PathRepository {
 
-    fun getPath(start : LatLng, end : LatLng) : Flow<List<String>>
+    fun getPath(start : LatLng, end : LatLng) : Flow<RouteResponse>
 }

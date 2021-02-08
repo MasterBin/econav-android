@@ -51,28 +51,17 @@ fun ViewContext.MainMapView(
 
                 }
                 is MainMap.State.PathLoaded -> {
-                    val f = it.state.formattedPath.map {
-                        PolyUtil.decode(it)
-                    }.apply {
-                        forEachIndexed { index, it ->
-                            map.addPolyline {
-                                addAll(it)
-                                color(when(index % 6) {
-                                    0 -> Color.BLACK
-                                    1 -> Color.BLUE
-                                    2 -> Color.GREEN
-                                    3 -> Color.RED
-                                    4 -> Color.YELLOW
-                                    else -> Color.MAGENTA
-                                })
-                            }
-                        }
+                    val f = PolyUtil.decode(it.state.formattedPath)
+
+                    map.addPolyline {
+                        addAll(f)
+                        color(Color.BLUE)
                     }
 
                     map.animateCamera(
                         CameraUpdateFactory
                             .newCameraPosition(cameraPosition {
-                                target(f[0][0])
+                                target(f[0])
                                 zoom(12f)
                             })
                     )
