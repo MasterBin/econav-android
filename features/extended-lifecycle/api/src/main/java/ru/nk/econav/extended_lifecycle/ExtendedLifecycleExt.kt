@@ -11,44 +11,43 @@ inline fun ExtendedLifecycle.subscribe(
     crossinline onStop: () -> Unit = {},
     crossinline onLowMemory: () -> Unit = {},
     crossinline onSaveInstanceState: (outState: Bundle) -> Unit = {},
-    crossinline onDestroy: () -> Unit = {},
+    crossinline onDestroy: (DefaultExtendedLifecycleCallbacks) -> Unit = {},
 ) {
-    subscribe(
-        object : DefaultExtendedLifecycleCallbacks {
-
-            override fun onCreate(savedInstanceState: Bundle?) {
-                onCreate.invoke(savedInstanceState)
-            }
-
-            override fun onStart() {
-                onStart.invoke()
-            }
-
-            override fun onResume() {
-                onResume.invoke()
-            }
-
-            override fun onPause() {
-                onPause.invoke()
-            }
-
-            override fun onStop() {
-                onStop.invoke()
-            }
-
-            override fun onLowMemory() {
-                onLowMemory.invoke()
-            }
-
-            override fun onSaveInstanceState(outState: Bundle) {
-                onSaveInstanceState.invoke(outState)
-            }
-
-            override fun onDestroy() {
-                onDestroy.invoke()
-            }
+    val callbacks = object : DefaultExtendedLifecycleCallbacks {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            onCreate.invoke(savedInstanceState)
         }
-    )
+
+        override fun onStart() {
+            onStart.invoke()
+        }
+
+        override fun onResume() {
+            onResume.invoke()
+        }
+
+        override fun onPause() {
+            onPause.invoke()
+        }
+
+        override fun onStop() {
+            onStop.invoke()
+        }
+
+        override fun onLowMemory() {
+            onLowMemory.invoke()
+        }
+
+        override fun onSaveInstanceState(outState: Bundle) {
+            onSaveInstanceState.invoke(outState)
+        }
+
+        override fun onDestroy() {
+            onDestroy.invoke(this)
+        }
+    }
+
+    subscribe(callbacks)
 }
 
 fun Lifecycle.extended(extension: LifecycleExtension): ExtendedLifecycle = extension.create(this)

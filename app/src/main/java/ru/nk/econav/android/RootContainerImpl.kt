@@ -7,36 +7,34 @@ import com.arkivanov.decompose.router
 import com.arkivanov.decompose.value.Value
 import kotlinx.android.parcel.Parcelize
 import ru.nk.econav.android.RootContainer.*
-import ru.nk.econav.android.map.MainMap
-import ru.nk.econav.android.map.PathRepository
 
-class RootContainerImpl(
-    componentContext: ComponentContext,
-    dependencies: Dependencies
-) : RootContainer, ComponentContext by componentContext, Dependencies by dependencies {
-
-    private val router = router<Configuration, Child>(
-        initialConfiguration = Configuration.MainMap,
-        handleBackButton = true,
-        componentFactory = ::createChild
-    )
-
-    override val routerState: Value<RouterState<*, Child>> = router.state
-
-    private fun createChild(config : Configuration, componentContext: ComponentContext) : Child =
-        when(config) {
-            Configuration.MainMap -> Child.Map(createMainMap(componentContext))
-        }
-
-    private fun createMainMap(componentContext: ComponentContext) =
-        MainMap(
-            componentContext,
-            object : MainMap.Dependencies, Dependencies by this {}
-        )
-
-
-    private sealed class Configuration : Parcelable {
-        @Parcelize
-        object MainMap : Configuration()
-    }
-}
+//class RootContainerImpl(
+//    componentContext: ComponentContext,
+//    dependencies: Dependencies
+//) : RootContainer, ComponentContext by componentContext, Dependencies by dependencies {
+//
+//    private val router = router<Configuration, Child>(
+//        initialConfiguration = Configuration.MainMap,
+//        handleBackButton = true,
+//        componentFactory = ::createChild
+//    )
+//
+//    override val routerState: Value<RouterState<*, Child>> = router.state
+//
+//    private fun createChild(config : Configuration, componentContext: ComponentContext) : Child =
+//        when(config) {
+//            Configuration.MainMap -> Child.Map(createMainMap(componentContext))
+//        }
+//
+//    private fun createMainMap(componentContext: ComponentContext) =
+//        MainMap(
+//            componentContext,
+//            object : MainMap.Dependencies, Dependencies by this {}
+//        )
+//
+//
+//    private sealed class Configuration : Parcelable {
+//        @Parcelize
+//        object MainMap : Configuration()
+//    }
+//}

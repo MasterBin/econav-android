@@ -1,11 +1,9 @@
 object Vers {
-    const val COROUTINES = "1.4.2"
-    const val KOTLIN_SERIALIZATION = "1.0.1"
+    const val COROUTINES = "1.4.3"
+    const val KOTLIN_SERIALIZATION = "1.1.0"
 
-    const val FIREBASE_BOM = "25.12.0"
-
-    const val KOTLIN = "1.4.21"
-    const val JUNIT = "4.13.1"
+    const val KOTLIN = "1.4.31"
+    const val JUNIT = "4.13.2"
     const val DESUGAR_JDL_LIBS = "1.0.10"
 
     const val MOCKITO = "3.5.13"
@@ -13,7 +11,7 @@ object Vers {
     const val APP_COMPAT = "1.2.0"
     const val CONSTRAINT_LAYOUT = "2.0.2"
     const val MATERIAL = "1.2.1"
-    const val LIFECYCLE = "2.2.0"
+
     const val SWIPE_REFRESH_LAYOUT = "1.1.0"
     const val PREFERENCE = "1.1.1"
 
@@ -21,7 +19,7 @@ object Vers {
 
     const val TIMBER = "4.7.1"
 
-    const val LEAK_CANARY = "2.6"
+    const val LEAK_CANARY = "2.7"
 
     const val KOIN = "2.2.2"
 
@@ -30,12 +28,6 @@ object Vers {
     const val CONDUCTOR = "3.0.0"
 
     const val RUNTIME_PERMISSIONS = "1.1.2"
-
-    const val MVIKOTLIN = "2.0.0"
-
-    const val RETROFIT = "2.9.0"
-
-    const val OKHTTP = "4.9.0"
 
     const val OSM = "6.1.8"
 
@@ -46,6 +38,4 @@ object Vers {
     const val COIL = "1.1.0"
 
     const val PHOTO_VIEW = "2.3.0"
-
-    const val DECOMPOSE = "0.1.7"
 }

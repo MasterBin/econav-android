@@ -19,3 +19,9 @@ internal fun DependencyHandler.compileOnly(depName: String) {
 internal fun DependencyHandler.api(depName: String) {
     add("api", depName)
 }
+
+fun DependencyHandler.implementation(depNames: List<String>) {
+    depNames.forEach { dep ->
+        add("implementation", dep)
+    }
+}

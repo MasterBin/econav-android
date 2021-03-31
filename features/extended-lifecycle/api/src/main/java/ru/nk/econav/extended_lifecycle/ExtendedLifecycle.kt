@@ -6,6 +6,7 @@ interface ExtendedLifecycle {
 
     fun subscribe(callbacks: Callbacks)
     fun unsubscribe(callbacks: Callbacks)
+    fun dispose()
 
     interface Callbacks {
         fun onCreate(savedInstanceState : Bundle?)

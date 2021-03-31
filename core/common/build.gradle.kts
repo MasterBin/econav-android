@@ -3,12 +3,9 @@ plugins {
 }
 
 dependencies {
-    api(Deps.conductor)
-    api(Deps.conductorViewPager)
-    api(Deps.conductorTransactions)
-    api(Deps.coroutines)
-    api(Deps.koinScope)
+    implementation(Deps.coroutines)
 
-    implementation("com.arkivanov.decompose:decompose:0.1.5")
-    implementation("com.arkivanov.decompose:extensions-android:0.1.5")
+    implementation(Deps.Decompose.common)
+    implementation(Deps.MVIKotlin.base())
+    implementation(Deps.Activity.all())
 }

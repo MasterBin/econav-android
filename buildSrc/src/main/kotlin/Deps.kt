@@ -11,8 +11,12 @@ object Deps {
         const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Vers.SWIPE_REFRESH_LAYOUT}"
         const val preference = "androidx.preference:preference-ktx:${Vers.PREFERENCE}"
 
-        const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Vers.LIFECYCLE}"
-        const val lifecycleCommon = "androidx.lifecycle:lifecycle-common-java8:${Vers.LIFECYCLE}"
+        object Lifecycle {
+            private const val version = "2.3.0"
+
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
+            const val common = "androidx.lifecycle:lifecycle-common-java8:$version"
+        }
     }
 
     object Testing {
@@ -36,18 +40,42 @@ object Deps {
 
     const val runtimePermissions = "com.github.florent37:runtime-permission:${Vers.RUNTIME_PERMISSIONS}"
 
-    const val mviKotlin = "com.arkivanov.mvikotlin:mvikotlin:${Vers.MVIKOTLIN}"
-    const val mviKotlinMain = "com.arkivanov.mvikotlin:mvikotlin-main:${Vers.MVIKOTLIN}"
-    const val mviKotlinLogging = "com.arkivanov.mvikotlin:mvikotlin-logging:${Vers.MVIKOTLIN}"
-    const val mviKotlinTimetravel = "com.arkivanov.mvikotlin:mvikotlin-timetravel:${Vers.MVIKOTLIN}"
-    const val mviKotlinRx = "com.arkivanov.mvikotlin:rx:${Vers.MVIKOTLIN}"
+    object MVIKotlin {
+        private const val version = "2.0.1"
 
-    const val retrofit = "com.squareup.retrofit2:retrofit:${Vers.RETROFIT}"
-    const val okHttp = "com.squareup.okhttp3:okhttp:${Vers.OKHTTP}"
-    const val okHttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Vers.OKHTTP}"
-    const val kotlinSerializationConverter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+        const val core = "com.arkivanov.mvikotlin:mvikotlin:$version"
+        const val main = "com.arkivanov.mvikotlin:mvikotlin-main:$version"
+        const val logging = "com.arkivanov.mvikotlin:mvikotlin-logging:$version"
+        const val timeTravel = "com.arkivanov.mvikotlin:mvikotlin-timetravel:$version"
+        const val rx = "com.arkivanov.mvikotlin:rx:$version"
+        const val coroutinesExt = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$version"
 
-    const val kotlinSerialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Vers.KOTLIN_SERIALIZATION}"
+        fun base() = listOf(core, main, logging, timeTravel, coroutinesExt)
+    }
+
+
+    object Retrofit {
+        private const val version = "2.9.0"
+        const val retrofit = "com.squareup.retrofit2:retrofit:$version"
+        const val kotlinSerializationConverter =
+            "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+
+        fun base() = retrofit
+        fun all() = listOf(retrofit, kotlinSerializationConverter)
+    }
+
+    object OkHttp {
+        private const val version = "4.9.1"
+
+        const val okHttp = "com.squareup.okhttp3:okhttp:$version"
+        const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
+
+        fun base() = okHttp
+        fun all() = listOf(okHttp, loggingInterceptor)
+    }
+
+    const val kotlinSerialization =
+        "org.jetbrains.kotlinx:kotlinx-serialization-json:${Vers.KOTLIN_SERIALIZATION}"
 
     const val osm = "org.osmdroid:osmdroid-android:${Vers.OSM}"
 
@@ -61,32 +89,72 @@ object Deps {
 
     const val photoView = "com.github.chrisbanes:PhotoView:${Vers.PHOTO_VIEW}"
 
+    object Accompanist {
+        private const val version = "0.7.0"
+
+        const val insets = "com.google.accompanist:accompanist-insets:$version"
+    }
+
     object Firebase {
-        const val bom = "com.google.firebase:firebase-bom:${Vers.FIREBASE_BOM}"
+        private const val version = "25.12.0"
+
+        const val bom = "com.google.firebase:firebase-bom:$version"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
         const val analytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
 
-    object GooglePlay {
+    object GoogleMap {
         const val maps = "com.google.android.gms:play-services-maps:17.0.0"
-        const val mapsKtx = "com.google.maps.android:maps-ktx:2.2.0"
-        const val mapUtils = "com.google.maps.android:android-maps-utils:2.2.0"
-        const val mapUtilsKtx = "com.google.maps.android:maps-utils-ktx:2.2.0"
+
+        private const val ktxVersion = "3.0.0"
+        private const val utilVersion = "2.2.0"
+
+        const val mapsKtx = "com.google.maps.android:maps-ktx:$ktxVersion"
+        const val mapUtils = "com.google.maps.android:android-maps-utils:$utilVersion"
+        const val mapUtilsKtx = "com.google.maps.android:maps-utils-ktx:$ktxVersion"
+
+        fun all() = listOf(maps, mapsKtx, mapUtils, mapUtilsKtx)
     }
 
     object Decompose {
-        const val decomposeCommon = "com.arkivanov.decompose:decompose:${Vers.DECOMPOSE}"
-        const val decomposeAndroidExt = "com.arkivanov.decompose:extensions-android:${Vers.DECOMPOSE}"
+        private const val version = "0.2.1"
+
+        const val common = "com.arkivanov.decompose:decompose:$version"
+        const val androidExt = "com.arkivanov.decompose:extensions-android:$version"
+        const val composeExt = "com.arkivanov.decompose:extensions-compose-jetpack:$version"
+
+        fun composeVariant() = listOf(common, composeExt)
+    }
+
+    object Activity {
+        private const val version = "1.3.0-alpha05"
+
+        const val activity = "androidx.activity:activity:$version"
+        const val ktx = "androidx.activity:activity-ktx:$version"
+        const val composeExt = "androidx.activity:activity-compose:$version"
+
+        fun all() = listOf(activity, ktx, composeExt)
+    }
+
+    object Compose {
+        const val version = "1.0.0-beta03"
+
+        const val ui = "androidx.compose.ui:ui:$version"
+        const val material = "androidx.compose.material:material:$version"
+        const val materialIcons = "androidx.compose.material:material-icons-extended:$version"
+        const val tooling = "androidx.compose.ui:ui-tooling:$version"
+
+        fun allBase() = listOf(
+            ui,
+            material,
+            materialIcons,
+            tooling
+        )
     }
 }
 
 fun DependencyHandler.desugaring() {
     coreLibraryDesugaring(Deps.desugarJDKLibs)
-}
-
-fun DependencyHandler.mviKotlin() {
-    implementation(Deps.mviKotlin)
-    implementation(Deps.mviKotlinMain)
 }
 
 fun DependencyHandler.conductor() {

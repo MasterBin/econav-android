@@ -6,6 +6,8 @@ dependencies {
     implementation(project(":core:common"))
     api(project(":features:extended-lifecycle:api"))
 
-    implementation(Deps.Decompose.decomposeCommon)
-    implementation(Deps.Decompose.decomposeAndroidExt)
+    implementation(Deps.koinScope)
+    implementation(Deps.Decompose.common)
+    implementation(Deps.Decompose.androidExt)
+    implementation(Deps.Activity.all())
 }

@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(Deps.Decompose.decomposeCommon)
-    implementation(Deps.Decompose.decomposeAndroidExt)
+    implementation(Deps.Decompose.common)
+    implementation(Deps.Decompose.androidExt)
+    implementation(Deps.Activity.all())
 }

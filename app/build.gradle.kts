@@ -1,12 +1,11 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
     kotlin("plugin.serialization")
 //    id("com.google.firebase.crashlytics")
 //    id("com.google.gms.google-services")
@@ -14,7 +13,7 @@ plugins {
 
 android {
     compileSdkVersion(AndroidConfig.COMPILE_SDK_VERSION)
-//    buildToolsVersion(AndroidConfig.BUILD_TOOLS_VERSION)
+    buildToolsVersion(AndroidConfig.BUILD_TOOLS_VERSION)
 
     defaultConfig {
         applicationId = AndroidConfig.APPLICATION_ID
@@ -36,6 +35,8 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
     buildTypes {
@@ -69,6 +70,11 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Deps.Compose.version
     }
 }
 
@@ -77,13 +83,16 @@ dependencies {
 //    implementation(Deps.Firebase.crashlytics)
 //    implementation(Deps.Firebase.analytics)
 
-    implementation(Deps.Decompose.decomposeCommon)
-    implementation(Deps.Decompose.decomposeAndroidExt)
+    implementation(Deps.Decompose.common)
+    implementation(Deps.Decompose.androidExt)
+    implementation(Deps.Decompose.composeExt)
 
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
 
     implementation(project(":core:common"))
     implementation(project(":features:extended-lifecycle:impl"))
+    implementation(project(":features:mapscreen"))
+    implementation(project(":core:ui"))
 
     implementation(Deps.timber)
     implementation(Deps.AndroidX.appCompat)
@@ -93,16 +102,17 @@ dependencies {
     implementation(Deps.AndroidX.swipeRefreshLayout)
     implementation(Deps.coil)
 
-    implementation(Deps.GooglePlay.maps)
-    implementation(Deps.GooglePlay.mapUtils)
-    implementation(Deps.GooglePlay.mapsKtx)
-    implementation(Deps.GooglePlay.mapUtilsKtx)
+    implementation(Deps.GoogleMap.all())
 
-    implementation(Deps.retrofit)
-    implementation(Deps.okHttp)
-    implementation(Deps.okHttpLoggingInterceptor)
+    implementation(Deps.Compose.allBase())
+    implementation(Deps.Activity.all())
+    implementation(Deps.koinScope)
 
-    implementation(Deps.kotlinSerializationConverter)
+    implementation(Deps.Accompanist.insets)
+
+    implementation(Deps.Retrofit.all())
+    implementation(Deps.OkHttp.all())
+
     implementation(Deps.kotlinSerialization)
 
     testImplementation(Deps.Testing.junit)
