@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -89,7 +90,7 @@ fun LittleScreen() {
 fun BottomDrawer() {
     Box(Modifier.fillMaxSize()) {
         Column(
-            Modifier.verticalScroll(rememberScrollState()).background(Color.Black)
+            Modifier.verticalScroll(rememberScrollState())
         ) {
             generateSequence("") { it + "1" }.take(100).forEach {
                 Text(it)
@@ -106,6 +107,18 @@ fun BottomDrawer() {
                         onTextChanged = {}
                     )
                     Spacer(Modifier.height(24.dp))
+                }
+            },
+            drawerContent = {
+                BoxWithConstraints(Modifier.fillMaxSize().background(Color.Red)) {
+                    Text("manHeight is $maxHeight")
+                    Text(modifier = Modifier.align(Alignment.BottomCenter), text ="HELLO")
+                }
+            },
+            drawerContentExpanded = {
+                BoxWithConstraints(Modifier.fillMaxSize().background(Color.Blue)) {
+                    Text("manHeight is $maxHeight")
+                    Text(modifier = Modifier.align(Alignment.BottomCenter), text ="HELLO")
                 }
             }
         )

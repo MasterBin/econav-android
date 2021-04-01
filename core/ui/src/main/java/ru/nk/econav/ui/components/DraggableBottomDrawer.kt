@@ -4,11 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.SwipeableDefaults.resistanceConfig
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -34,6 +35,7 @@ fun DraggableBottomDrawer(
     contentColor: Color = contentColorFor(color),
     border: BorderStroke? = null,
     elevation: Dp = 20.dp,
+    drawerRatio: Float = 0.5f,
     drawerContent: @Composable () -> Unit = @Composable {},
     drawerContentExpanded: @Composable () -> Unit = @Composable {},
     onDrawerContent: @Composable () -> Unit = @Composable {}
@@ -41,78 +43,83 @@ fun DraggableBottomDrawer(
     val swipeableState = rememberSwipeableState(1)
 
     BoxWithConstraints(modifier.fillMaxSize()) {
-        val maxHeight2 = with(LocalDensity.current) {
-            constraints.maxHeight.toDp()
-        }
         val fullHeight = constraints.maxHeight.toFloat()
-        val maxHeight by remember { mutableStateOf(maxHeight2) }
-        val openPercent = 0.5f
 
         val anchors = mapOf(
             0f to 0,
-            fullHeight * openPercent to 1,
-            fullHeight to 2
+            fullHeight * drawerRatio to 1,
         )
+
         val swipeableModifier = Modifier.swipeable(
             state = swipeableState,
             anchors = anchors,
             enabled = true,
-            thresholds = { from, to ->
-                if (to == 2)
-                    FixedThreshold(1000000.dp)
-                else
-                    FractionalThreshold(0.2f)
-            },
+            thresholds = { _, _ -> FractionalThreshold(0.3f) },
+            resistance = resistanceConfig(anchors.keys, 0f, 10f),
             orientation = Orientation.Vertical
         )
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .offset {
-                    IntOffset(x = 0, y = swipeableState.offset.value.roundToInt())
-                },
-            verticalArrangement = Arrangement.Bottom
-        ) {
+        Box(Modifier.fillMaxSize()) {
             AnimatedVisibility(
-                visible = (swipeableState.offset.value >= fullHeight * openPercent),
+                modifier = Modifier
+                    .layout { measurable, constraints ->
+                        val placeable = measurable.measure(constraints)
+
+                        layout(placeable.width, placeable.height) {
+                            placeable.placeRelativeWithLayer(
+                                0,
+                                (swipeableState.offset.value - placeable.height).roundToInt()
+                            )
+                        }
+                    }
+                    .align(Alignment.TopCenter),
+                visible = (swipeableState.offset.value >= fullHeight * drawerRatio),
                 initiallyVisible = true
             ) {
                 onDrawerContent()
             }
-            Surface(
-                swipeableModifier.fillMaxSize(),
-                shape = shape,
-                color = color,
-                elevation = elevation,
-                contentColor = contentColor,
-                border = border
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .offset {
+                        IntOffset(x = 0, y = swipeableState.offset.value.roundToInt())
+                    },
+                verticalArrangement = Arrangement.Top
             ) {
-                Column(
-                    Modifier.fillMaxSize()
+                Surface(
+                    swipeableModifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(if (swipeableState.offset.value >= fullHeight * drawerRatio) 1 - drawerRatio else 1f),
+                    shape = shape,
+                    color = color,
+                    elevation = elevation,
+                    contentColor = contentColor,
+                    border = border
                 ) {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        Modifier.fillMaxSize()
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_bottom_drawer_arrow),
-                            contentDescription = null
-                        )
-                    }
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(if (swipeableState.offset.value >= fullHeight * openPercent) 1 - openPercent else 1f)
-                    ) {
-                        Crossfade(targetState = swipeableState.offset.value >= fullHeight * openPercent) {
-                            if(it) {
-                                Box(Modifier.fillMaxSize().background(Color.Red))
-                            } else {
-                                Box(Modifier.fillMaxSize().background(Color.Green))
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(vertical = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bottom_drawer_arrow),
+                                contentDescription = null
+                            )
+                        }
+                        Box(
+                            Modifier.fillMaxSize()
+                        ) {
+                            Crossfade(targetState = swipeableState.offset.value >= fullHeight * drawerRatio) {
+                                if (it) {
+                                    drawerContent()
+                                } else {
+                                    drawerContentExpanded()
+                                }
                             }
                         }
                     }
