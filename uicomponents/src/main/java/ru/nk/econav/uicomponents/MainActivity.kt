@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         when (screen) {
                             Screen.Little -> LittleScreen()
                             Screen.BottomDrawer -> BottomDrawer()
+                            Screen.Map -> Map()
                         }
                     }
                 }
@@ -60,7 +61,7 @@ class MainActivity : ComponentActivity() {
 }
 
 enum class Screen(val index: Int) {
-    Little(0), BottomDrawer(1)
+    Little(0), BottomDrawer(1), Map(2)
 }
 
 @Composable
@@ -88,6 +89,8 @@ fun LittleScreen() {
 
 @Composable
 fun BottomDrawer() {
+    var hidden by remember { mutableStateOf(false) }
+
     Box(Modifier.fillMaxSize()) {
         Column(
             Modifier.verticalScroll(rememberScrollState())
@@ -98,14 +101,17 @@ fun BottomDrawer() {
         }
         DraggableBottomDrawer(
             modifier = Modifier.fillMaxSize(),
+            hidden = hidden,
             onDrawerContent = {
                 Column() {
-                    Search(
-                        Modifier.padding(horizontal = 8.dp),
-                        hintText = "Search",
-                        text = "",
-                        onTextChanged = {}
-                    )
+                    TextButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            hidden = !hidden
+                        },
+                    ) {
+                        Text(text = "HIDE/SHOW")
+                    }
                     Spacer(Modifier.height(24.dp))
                 }
             },

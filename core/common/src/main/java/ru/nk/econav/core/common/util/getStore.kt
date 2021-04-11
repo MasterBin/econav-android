@@ -28,17 +28,17 @@ private class StoreHolder<T : Store<*, *, *>>(
 fun <T : Any> Store<*, T, *>.asValue(): Value<T> =
     object : Value<T>() {
         override val value: T get() = state
-//        private val scope = CoroutineScope(Dispatchers.Main)
         private var jobs = emptyMap<ValueObserver<T>, CoroutineScope>()
 
         override fun subscribe(observer: ValueObserver<T>) {
-            val scope = CoroutineScope(Dispatchers.Main)
+            val scope = MainScope()
             scope.launch {
                 states.collect {
                     observer.invoke(it)
                 }
             }
-            jobs = jobs + (observer to scope)
+
+            jobs += (observer to scope)
         }
 
         override fun unsubscribe(observer: ValueObserver<T>) {

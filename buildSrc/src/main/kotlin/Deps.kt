@@ -23,6 +23,7 @@ object Deps {
         const val junit = "junit:junit:${Vers.JUNIT}"
         const val mockito = "org.mockito:mockito-core:${Vers.MOCKITO}"
         const val leakCanary = "com.squareup.leakcanary:leakcanary-android:${Vers.LEAK_CANARY}"
+        const val jetpackComposeUITest = "androidx.compose.ui:ui-test-junit4:${Compose.version}"
     }
 
     const val badgeDrawable = "com.github.v2rc:badger:${Vers.BADGE_DRAWABLE}"
@@ -77,7 +78,15 @@ object Deps {
     const val kotlinSerialization =
         "org.jetbrains.kotlinx:kotlinx-serialization-json:${Vers.KOTLIN_SERIALIZATION}"
 
-    const val osm = "org.osmdroid:osmdroid-android:${Vers.OSM}"
+    object OSMDroid {
+
+        const val osm = "org.osmdroid:osmdroid-android:${Vers.OSM}"
+        const val geopackage = "org.osmdroid:osmdroid-geopackage:${Vers.OSM}"
+
+        fun all() = listOf(osm, geopackage)
+    }
+
+
 
     const val desugarJDKLibs = "com.android.tools:desugar_jdk_libs:${Vers.DESUGAR_JDL_LIBS}"
 
@@ -150,6 +159,8 @@ object Deps {
             materialIcons,
             tooling
         )
+
+        fun base() = ui
     }
 }
 

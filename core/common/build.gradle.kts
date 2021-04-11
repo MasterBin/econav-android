@@ -1,5 +1,6 @@
 plugins {
-    `android-base-lib`
+    `android-base-lib-compose`
+    kotlin("plugin.serialization")
 }
 
 dependencies {
@@ -8,4 +9,5 @@ dependencies {
     implementation(Deps.Decompose.common)
     implementation(Deps.MVIKotlin.base())
     implementation(Deps.Activity.all())
+    implementation(Deps.kotlinSerialization)
 }

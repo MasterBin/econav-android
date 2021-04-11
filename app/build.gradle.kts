@@ -89,10 +89,13 @@ dependencies {
 
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
 
+    implementation(project(":di"))
     implementation(project(":core:common"))
     implementation(project(":features:extended-lifecycle:impl"))
-    implementation(project(":features:mapscreen"))
+    implementation(project(":features:mainscreen"))
     implementation(project(":core:ui"))
+    implementation(project(":features:eco-param-elector:api"))
+    implementation(project(":features:map:api"))
 
     implementation(Deps.timber)
     implementation(Deps.AndroidX.appCompat)

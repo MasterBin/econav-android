@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -44,6 +45,7 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
+    implementation(project(":features:mainscreen"))
     implementation(Deps.timber)
     implementation(Deps.Compose.allBase())
     implementation(Deps.Activity.all())

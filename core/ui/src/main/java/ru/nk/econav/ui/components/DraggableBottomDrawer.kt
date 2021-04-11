@@ -10,9 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.SwipeableDefaults.resistanceConfig
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,19 +33,28 @@ fun DraggableBottomDrawer(
     contentColor: Color = contentColorFor(color),
     border: BorderStroke? = null,
     elevation: Dp = 20.dp,
+    hidden: Boolean = false,
     drawerRatio: Float = 0.5f,
     drawerContent: @Composable () -> Unit = @Composable {},
     drawerContentExpanded: @Composable () -> Unit = @Composable {},
     onDrawerContent: @Composable () -> Unit = @Composable {}
 ) {
+    check(drawerRatio in 0f..1f)
     val swipeableState = rememberSwipeableState(1)
+    val drawerRatioInner: Float = 1 - drawerRatio
 
     BoxWithConstraints(modifier.fillMaxSize()) {
         val fullHeight = constraints.maxHeight.toFloat()
 
+        val peekHeight = 32.dp
+        val peekHeightPx = with(LocalDensity.current) {
+            peekHeight.toPx()
+        }
+
         val anchors = mapOf(
             0f to 0,
-            fullHeight * drawerRatio to 1,
+            (fullHeight * drawerRatioInner) to 1,
+            (fullHeight - peekHeightPx) to 2
         )
 
         val swipeableModifier = Modifier.swipeable(
@@ -55,9 +62,17 @@ fun DraggableBottomDrawer(
             anchors = anchors,
             enabled = true,
             thresholds = { _, _ -> FractionalThreshold(0.3f) },
-            resistance = resistanceConfig(anchors.keys, 0f, 10f),
+            resistance = resistanceConfig(anchors.keys, 0f, 0f),
             orientation = Orientation.Vertical
         )
+
+        LaunchedEffect(key1 = hidden) {
+            if (hidden) {
+                swipeableState.animateTo(2)
+            } else {
+                swipeableState.animateTo(1)
+            }
+        }
 
         Box(Modifier.fillMaxSize()) {
             AnimatedVisibility(
@@ -73,7 +88,7 @@ fun DraggableBottomDrawer(
                         }
                     }
                     .align(Alignment.TopCenter),
-                visible = (swipeableState.offset.value >= fullHeight * drawerRatio),
+                visible = (swipeableState.offset.value >= fullHeight * drawerRatioInner),
                 initiallyVisible = true
             ) {
                 onDrawerContent()
@@ -89,7 +104,7 @@ fun DraggableBottomDrawer(
                 Surface(
                     swipeableModifier
                         .fillMaxWidth()
-                        .fillMaxHeight(if (swipeableState.offset.value >= fullHeight * drawerRatio) 1 - drawerRatio else 1f),
+                        .fillMaxHeight(if (swipeableState.offset.value >= fullHeight * drawerRatioInner) 1 - drawerRatioInner else 1f),
                     shape = shape,
                     color = color,
                     elevation = elevation,
@@ -102,7 +117,7 @@ fun DraggableBottomDrawer(
                         Box(
                             Modifier
                                 .fillMaxWidth()
-                                .wrapContentHeight()
+                                .height(peekHeight)
                                 .padding(vertical = 8.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -111,14 +126,17 @@ fun DraggableBottomDrawer(
                                 contentDescription = null
                             )
                         }
-                        Box(
-                            Modifier.fillMaxSize()
-                        ) {
-                            Crossfade(targetState = swipeableState.offset.value >= fullHeight * drawerRatio) {
-                                if (it) {
-                                    drawerContent()
-                                } else {
-                                    drawerContentExpanded()
+                        if (!hidden) {
+                            Box(
+                                Modifier.fillMaxSize()
+                            ) {
+
+                                Crossfade(targetState = swipeableState.offset.value >= fullHeight * drawerRatioInner) {
+                                    if (it) {
+                                        drawerContent()
+                                    } else {
+                                        drawerContentExpanded()
+                                    }
                                 }
                             }
                         }

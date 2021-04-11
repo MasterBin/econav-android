@@ -50,7 +50,7 @@ class App : Application() {
             }
 
             androidContext(this@App)
-            modules(koinModules)
+            modules(ru.nk.econav.android.di.modules)
         }
     }
 }

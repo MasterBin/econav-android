@@ -15,12 +15,29 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/map-interface" />
+            <option value="$PROJECT_DIR$/core/network" />
+            <option value="$PROJECT_DIR$/core/network/api" />
+            <option value="$PROJECT_DIR$/core/network/impl" />
             <option value="$PROJECT_DIR$/core/ui" />
+            <option value="$PROJECT_DIR$/di" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/eco-param-elector" />
+            <option value="$PROJECT_DIR$/features/eco-param-elector/api" />
+            <option value="$PROJECT_DIR$/features/eco-param-elector/impl" />
             <option value="$PROJECT_DIR$/features/extended-lifecycle" />
             <option value="$PROJECT_DIR$/features/extended-lifecycle/api" />
             <option value="$PROJECT_DIR$/features/extended-lifecycle/impl" />
-            <option value="$PROJECT_DIR$/features/mapscreen" />
+            <option value="$PROJECT_DIR$/features/main" />
+            <option value="$PROJECT_DIR$/features/main/api" />
+            <option value="$PROJECT_DIR$/features/main/impl" />
+            <option value="$PROJECT_DIR$/features/mainscreen" />
+            <option value="$PROJECT_DIR$/features/map" />
+            <option value="$PROJECT_DIR$/features/map/api" />
+            <option value="$PROJECT_DIR$/features/map/impl" />
+            <option value="$PROJECT_DIR$/features/routing" />
+            <option value="$PROJECT_DIR$/features/routing/api" />
+            <option value="$PROJECT_DIR$/features/routing/impl" />
             <option value="$PROJECT_DIR$/uicomponents" />
           </set>
         </option>

@@ -1,5 +1,5 @@
 plugins {
-    `android-base-lib`
+    `android-base-lib-compose`
 }
 
 dependencies {

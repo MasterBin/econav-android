@@ -2,7 +2,7 @@ object Vers {
     const val COROUTINES = "1.4.3"
     const val KOTLIN_SERIALIZATION = "1.1.0"
 
-    const val KOTLIN = "1.4.31"
+    const val KOTLIN = "1.4.32"
     const val JUNIT = "4.13.2"
     const val DESUGAR_JDL_LIBS = "1.0.10"
 
@@ -29,7 +29,7 @@ object Vers {
 
     const val RUNTIME_PERMISSIONS = "1.1.2"
 
-    const val OSM = "6.1.8"
+    const val OSM = "6.1.10"
 
     const val INPUT_MASK = "6.0.0"
 
