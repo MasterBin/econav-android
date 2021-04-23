@@ -7,5 +7,6 @@ dependencies {
     implementation(project(":core:map-interface"))
     implementation(project(":features:main:api"))
 
+
     implementation(Deps.Compose.base())
 }

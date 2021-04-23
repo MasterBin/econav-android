@@ -5,4 +5,5 @@ plugins {
 dependencies {
     implementation(Deps.OSMDroid.osm)
     implementation(Deps.Decompose.common)
+    implementation(Deps.coroutines)
 }

@@ -6,3 +6,9 @@ fun <T> T?.ifNotNull(f : (T) -> Unit) : Unit =
     } else {
         Unit
     }
+
+
+fun ClosedFloatingPointRange<Float>.convert(number: Float, target: ClosedFloatingPointRange<Float>): Float {
+    val ratio = number / (endInclusive - start)
+    return (ratio * (target.endInclusive - target.start))
+}

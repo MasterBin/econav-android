@@ -1,70 +1,82 @@
 package ru.nk.econav.android.features.map.impl.map
 
-import android.content.Context
-import com.arkivanov.decompose.ComponentContext
+import android.util.Log
 import com.arkivanov.decompose.lifecycle.DefaultLifecycleCallbacks
 import com.arkivanov.decompose.lifecycle.Lifecycle
 import com.arkivanov.decompose.lifecycle.subscribe
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.overlay.Overlay
+import ru.nk.econav.android.core.mapinterface.BoundingBoxUpdate
 import ru.nk.econav.android.core.mapinterface.MapInterface
+import ru.nk.econav.core.common.decopmose.AppComponentContext
 
 class InnerMapComponent(
-    private val componentContext : ComponentContext
-) : ComponentContext by componentContext {
-
-    private val coroutineScope = MainScope()
+    private val componentContext: AppComponentContext
+) : AppComponentContext by componentContext {
 
     init {
         lifecycle.subscribe(
             onDestroy = {
-                coroutineScope.cancel()
+                componentScope.cancel()
             }
         )
     }
 
-    private lateinit var context : Context
-
     val overlaysFlow = MutableStateFlow<List<Overlay>>(listOf())
     val invalidateMapFlow = MutableSharedFlow<Unit>()
+    private val boundingBoxFlow = MutableSharedFlow<BoundingBoxUpdate>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
 
-    fun initContext(context : Context) {
-        this.context = context
+    fun updateBoundingBox(box: BoundingBox, fromZoom: Boolean) {
+        componentScope.launch {
+            boundingBoxFlow.emit(
+                BoundingBoxUpdate(
+                    box,
+                    fromZoom = fromZoom
+                )
+            )
+        }
     }
 
-    fun createInterface(lifecycle: Lifecycle) : MapInterface {
+    fun createInterface(lifecycle: Lifecycle): MapInterface {
         val interactor = object : MapInterface {
 
             var mutableOverlays = mutableListOf<Overlay>()
 
             override fun add(overlay: Overlay) {
-                coroutineScope.launch {
+                componentScope.launch {
                     mutableOverlays.add(overlay)
                     overlaysFlow.emit(overlaysFlow.value.plus(overlay))
                 }
             }
 
             override fun remove(overlay: Overlay) {
-                coroutineScope.launch {
+                componentScope.launch {
                     mutableOverlays.remove(overlay)
                     overlaysFlow.emit(overlaysFlow.value.minus(overlay))
                 }
             }
 
             override fun invalidateMap() {
-                coroutineScope.launch {
+                componentScope.launch {
                     invalidateMapFlow.emit(Unit)
                 }
             }
 
+            override val boundingBoxUpdateFlow: Flow<BoundingBoxUpdate> = boundingBoxFlow
         }
 
         val listener = object : DefaultLifecycleCallbacks {
             override fun onDestroy() {
-                coroutineScope.launch {
+                componentScope.launch {
                     overlaysFlow.emit(overlaysFlow.value.minus(interactor.mutableOverlays))
                 }
                 lifecycle.unsubscribe(this)

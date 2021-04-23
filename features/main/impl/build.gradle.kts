@@ -9,7 +9,8 @@ dependencies {
 
     implementation(project(":features:main:api"))
     implementation(project(":features:routing:api"))
-
+    implementation(project(":features:ecoplaces:api"))
+    implementation(project(":features:eco-param-elector:api"))
 
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())

@@ -19,4 +19,6 @@ dependencies {
     implementation(project(":features:map:impl"))
     implementation(project(":features:routing:api"))
     implementation(project(":features:routing:impl"))
+    implementation(project(":features:ecoplaces:api"))
+    implementation(project(":features:ecoplaces:impl"))
 }

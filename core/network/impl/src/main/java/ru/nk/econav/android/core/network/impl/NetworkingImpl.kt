@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import ru.nk.econav.android.core.network.api.Networking
+import java.util.concurrent.*
 
 class NetworkingImpl : Networking {
 
@@ -37,4 +38,6 @@ fun createOkhttpClient() : OkHttpClient =
                 )
             }
         }
+        .readTimeout(1, TimeUnit.HOURS)
+        .retryOnConnectionFailure(false)
         .build()

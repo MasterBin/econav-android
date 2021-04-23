@@ -27,6 +27,15 @@ class MainStoreProvider(
             Intent.CreateRouteByPlacingPoints -> dispatch(Result.StartPlacingPoints)
             is Intent.PlacePoint -> placingPoints(intent.point, getState)
             is Intent.RouteReceived -> dispatch(Result.ShowRoute(intent.route))
+            is Intent.ChangeEcoParam -> changeEcoParam(ecoParam = intent.ecoParam, getState = getState)
+        }
+
+        private fun changeEcoParam(ecoParam: Float, getState: () -> State) {
+            dispatch(Result.ChangeEcoParam(ecoParam))
+            val state = getState().routingState
+            if (state is State.Routing.RouteCreated) {
+                publish(Label.RequestRoute(state.route.from, state.route.to, getState().ecoParam))
+            }
         }
 
         private fun placingPoints(point: LatLon, getState: () -> State) {
@@ -39,11 +48,10 @@ class MainStoreProvider(
                 }
                 state.endPoint == null -> {
                     dispatch(Result.PlacingPoints(state.copy(endPoint = point)))
-                    publish(Label.RequestRoute(state.startPoint, point))
+                    publish(Label.RequestRoute(state.startPoint, point, getState().ecoParam))
                 }
             }
         }
-
     }
 
     private class ReducerImpl : Reducer<State, Result> {
@@ -53,6 +61,7 @@ class MainStoreProvider(
                 is Result.ShowRoute -> copy(routingState = State.Routing.RouteCreated(result.route))
                 Result.StartPlacingPoints -> copy(routingState = State.Routing.CreateRouteByPlacingPoints())
                 is Result.PlacingPoints -> copy(routingState = result.routingState)
+                is Result.ChangeEcoParam -> copy(ecoParam = result.ecoParam)
             }
     }
 
@@ -61,6 +70,7 @@ class MainStoreProvider(
         data class PlacingPoints(val routingState: State.Routing.CreateRouteByPlacingPoints) :
             Result()
 
+        data class ChangeEcoParam(val ecoParam : Float) : Result()
         object StartPlacingPoints : Result()
         data class ShowRoute(val route: Route) : Result()
     }

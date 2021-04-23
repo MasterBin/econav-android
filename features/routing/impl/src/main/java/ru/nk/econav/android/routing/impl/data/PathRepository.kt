@@ -5,5 +5,5 @@ import ru.nk.econav.core.common.models.LatLon
 
 interface PathRepository {
 
-    suspend fun getPath(start : LatLon, end : LatLon) : Route
+    suspend fun getPath(start : LatLon, end : LatLon, ecoParam : Float) : Route
 }

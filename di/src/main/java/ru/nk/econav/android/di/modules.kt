@@ -1,10 +1,7 @@
 package ru.nk.econav.android.di
 
 import ru.nk.econav.android.di.core.moduleNetwork
-import ru.nk.econav.android.di.features.moduleEcoParamElector
-import ru.nk.econav.android.di.features.moduleMain
-import ru.nk.econav.android.di.features.moduleMap
-import ru.nk.econav.android.di.features.moduleRouting
+import ru.nk.econav.android.di.features.*
 
 val modules = listOf(
     moduleNetwork,
@@ -12,5 +9,6 @@ val modules = listOf(
     moduleEcoParamElector,
     moduleMain,
     moduleMap,
-    moduleRouting
+    moduleRouting,
+    moduleEcoPlaces
 )

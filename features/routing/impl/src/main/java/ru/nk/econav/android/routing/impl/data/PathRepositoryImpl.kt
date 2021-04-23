@@ -10,12 +10,13 @@ class PathRepositoryImpl(
     private val api: Api
 ) : PathRepository {
 
-    override suspend fun getPath(start: LatLon, end: LatLon): Route =
+    override suspend fun getPath(start: LatLon, end: LatLon, ecoParam : Float): Route =
         withContext(Dispatchers.IO) {
             val res = api.getPath(
                 RouteApiRequest(
                     start = start,
                     end = end,
+                    ecoParam = ecoParam
                 )
             )
 

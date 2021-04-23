@@ -15,12 +15,14 @@ import ru.nk.econav.android.routing.api.model.RouteRequest
 import ru.nk.econav.android.routing.impl.data.Api
 import ru.nk.econav.android.routing.impl.data.PathRepositoryImpl
 import ru.nk.econav.core.common.decopmose.AppComponentContext
+import ru.nk.econav.core.common.util.convert
 
 class RoutingComponentImpl(
     private val componentContext: AppComponentContext,
-    private val deps : RoutingComponent.Dependencies,
-    private val networking : Networking
-) : RoutingComponent, RoutingComponent.Dependencies by deps, AppComponentContext by componentContext{
+    private val deps: RoutingComponent.Dependencies,
+    private val networking: Networking
+) : RoutingComponent, RoutingComponent.Dependencies by deps,
+    AppComponentContext by componentContext {
 
     private val executor = instanceKeeper.getOrCreate { Executor(networking) }
 
@@ -37,19 +39,23 @@ class RoutingComponentImpl(
 
 //FIXME: add supertype, deal with flows
 private class Executor(
-    private val networking : Networking,
+    private val networking: Networking
 ) : InstanceKeeper.Instance {
     private val coroutineScope = MainScope()
 
     private val routeReceived = MutableSharedFlow<Route>()
-    val routeFlow : Flow<Route> = routeReceived
+    val routeFlow: Flow<Route> = routeReceived
 
     private val api = networking.createApi(Api::class.java)
     private val pathRepository = PathRepositoryImpl(api)
 
-    fun requestRoute(request : RouteRequest) {
+    fun requestRoute(request: RouteRequest) {
         coroutineScope.launch {
-            val route = pathRepository.getPath(request.from, request.to)
+            val route = pathRepository.getPath(
+                start = request.from,
+                end = request.to,
+                ecoParam = request.parameterRange.convert(request.ecoParameter, 0f..1f)
+            )
             routeReceived.emit(route)
         }
     }

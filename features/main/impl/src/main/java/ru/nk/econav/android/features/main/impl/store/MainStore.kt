@@ -12,12 +12,13 @@ interface MainStore : Store<Intent, State, Label> {
         object Cancel : Intent()
         data class PlacePoint(val point: LatLon) : Intent()
         data class RouteReceived(val route: Route) : Intent()
+        data class ChangeEcoParam(val ecoParam: Float) : Intent()
     }
 
     data class State(
-        val routingState: Routing = Routing.General
+        val routingState: Routing = Routing.General,
+        val ecoParam: Float = 1f
     ) {
-
         sealed class Routing {
             object General : Routing()
 
@@ -35,7 +36,8 @@ interface MainStore : Store<Intent, State, Label> {
     sealed class Label {
         data class RequestRoute(
             val startPoint: LatLon,
-            val endPoint: LatLon
+            val endPoint: LatLon,
+            val ecoParam : Float
         ) : Label()
     }
 }

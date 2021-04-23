@@ -25,6 +25,9 @@
             <option value="$PROJECT_DIR$/features/eco-param-elector" />
             <option value="$PROJECT_DIR$/features/eco-param-elector/api" />
             <option value="$PROJECT_DIR$/features/eco-param-elector/impl" />
+            <option value="$PROJECT_DIR$/features/ecoplaces" />
+            <option value="$PROJECT_DIR$/features/ecoplaces/api" />
+            <option value="$PROJECT_DIR$/features/ecoplaces/impl" />
             <option value="$PROJECT_DIR$/features/extended-lifecycle" />
             <option value="$PROJECT_DIR$/features/extended-lifecycle/api" />
             <option value="$PROJECT_DIR$/features/extended-lifecycle/impl" />
