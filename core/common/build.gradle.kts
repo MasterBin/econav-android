@@ -6,8 +6,9 @@ plugins {
 dependencies {
     implementation(Deps.coroutines)
 
-    implementation(Deps.Decompose.common)
+    implementation(Deps.Compose.base())
+    implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())
-    implementation(Deps.Activity.all())
     implementation(Deps.kotlinSerialization)
+    implementation(Deps.Activity.all())
 }

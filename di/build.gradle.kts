@@ -3,22 +3,29 @@ plugins {
 }
 
 dependencies {
-    implementation(Deps.koinScope)
+    implementation(Deps.koin)
     implementation(Deps.Decompose.common)
     implementation(Deps.Compose.base())
 
-    implementation(project(":core:common"))
-    implementation(project(":core:network:api"))
-    implementation(project(":core:network:impl"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.network)
+    moduleDep(ModulesUnsafe.Core.networkImpl)
 
-    implementation(project(":features:eco-param-elector:api"))
-    implementation(project(":features:eco-param-elector:impl"))
-    implementation(project(":features:main:api"))
-    implementation(project(":features:main:impl"))
-    implementation(project(":features:map:api"))
-    implementation(project(":features:map:impl"))
-    implementation(project(":features:routing:api"))
-    implementation(project(":features:routing:impl"))
-    implementation(project(":features:ecoplaces:api"))
-    implementation(project(":features:ecoplaces:impl"))
+    moduleDep(Modules.Data.Routing.api)
+    moduleDep(ModulesUnsafe.Data.Routing.impl)
+
+    moduleDep(Modules.Features.ecoParamElector)
+    moduleDep(ModulesUnsafe.Features.ecoParamElectorImpl)
+
+    moduleDep(Modules.Features.main)
+    moduleDep(ModulesUnsafe.Features.mainImpl)
+
+    moduleDep(Modules.Features.map)
+    moduleDep(ModulesUnsafe.Features.mapImpl)
+
+    moduleDep(Modules.Features.userLocation)
+    moduleDep(ModulesUnsafe.Features.userLocationImpl)
+
+    moduleDep(Modules.Features.routing)
+    moduleDep(ModulesUnsafe.Features.routingImpl)
 }

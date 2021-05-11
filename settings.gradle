@@ -1,9 +1,7 @@
 rootProject.name = "econav-android"
+
 include ':app'
 include ':core:common'
-include ':features:mainscreen'
-include ':features:extended-lifecycle:api'
-include ':features:extended-lifecycle:impl'
 include ':core:ui'
 include ':uicomponents'
 include ':core:network'
@@ -22,3 +20,12 @@ include ':features:main:api'
 include ':features:main:impl'
 include ':features:ecoplaces:api'
 include ':features:ecoplaces:impl'
+
+include ':data:routing:api'
+include ':data:routing:impl'
+include ':data:routing:models'
+include ':core:resources'
+include ':features:general:api'
+include ':features:general:impl'
+include ':features:userlocation:api'
+include ':features:userlocation:impl'

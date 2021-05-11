@@ -12,13 +12,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(AndroidConfig.COMPILE_SDK_VERSION)
-    buildToolsVersion(AndroidConfig.BUILD_TOOLS_VERSION)
+    compileSdk = AndroidConfig.COMPILE_SDK_VERSION
+    buildToolsVersion = AndroidConfig.BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId = AndroidConfig.APPLICATION_ID
-        minSdkVersion(AndroidConfig.MIN_SDK_VERSION)
-        targetSdkVersion(AndroidConfig.TARGET_SDK_VERSION)
+        minSdk = AndroidConfig.MIN_SDK_VERSION
+        targetSdk = AndroidConfig.TARGET_SDK_VERSION
         versionCode = AndroidConfig.VERSION_CODE
         versionName = AndroidConfig.VERSION_NAME
 
@@ -51,25 +51,24 @@ android {
             isMinifyEnabled = false
             isDebuggable = true
         }
-        maybeCreate("debug-minify")
-        getByName("debug-minify") {
-            initWith(getByName("debug"))
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            matchingFallbacks += "debug"
-//            firebaseCrashlytics {
-//                mappingFileUploadEnabled=true
-//            }
-        }
+//        maybeCreate("debug-minify")
+//        getByName("debug-minify") {
+//            initWith(getByName("debug"))
+//            isMinifyEnabled = true
+//            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+//            matchingFallbacks += "debug"
+////            firebaseCrashlytics {
+////                mappingFileUploadEnabled=true
+////            }
+//        }
         maybeCreate("leakCanary")
-        getByName("leakCanary") {
-            initWith(getByName("debug"))
-            matchingFallbacks += "debug"
-        }
+//        getByName("leakCanary") {
+//            initWith(getByName("debug"))
+//            matchingFallbacks += "debug"
+//        }
     }
 
     buildFeatures {
-        viewBinding = true
         compose = true
     }
 
@@ -78,24 +77,25 @@ android {
     }
 }
 
+androidComponents {
+
+}
+
 dependencies {
 //    implementation(platform(Deps.Firebase.bom))
 //    implementation(Deps.Firebase.crashlytics)
 //    implementation(Deps.Firebase.analytics)
+
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.ui)
+    moduleDep(Modules.Features.map)
+    moduleDep(ModulesUnsafe.di)
 
     implementation(Deps.Decompose.common)
     implementation(Deps.Decompose.androidExt)
     implementation(Deps.Decompose.composeExt)
 
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
-
-    implementation(project(":di"))
-    implementation(project(":core:common"))
-    implementation(project(":features:extended-lifecycle:impl"))
-    implementation(project(":features:mainscreen"))
-    implementation(project(":core:ui"))
-    implementation(project(":features:eco-param-elector:api"))
-    implementation(project(":features:map:api"))
 
     implementation(Deps.timber)
     implementation(Deps.AndroidX.appCompat)
@@ -109,7 +109,7 @@ dependencies {
 
     implementation(Deps.Compose.allBase())
     implementation(Deps.Activity.all())
-    implementation(Deps.koinScope)
+    implementation(Deps.koin)
 
     implementation(Deps.Accompanist.insets)
 

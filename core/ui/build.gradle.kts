@@ -3,6 +3,9 @@ plugins {
 }
 
 dependencies {
+
+    moduleDep(Modules.Core.resources)
+
     implementation(Deps.Compose.allBase())
-    implementation(Deps.Accompanist.insets)
+    implementation(Deps.Accompanist.systemUiController)
 }

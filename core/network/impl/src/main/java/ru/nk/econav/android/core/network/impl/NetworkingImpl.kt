@@ -24,7 +24,11 @@ fun createRetrofit() : Retrofit =
     Retrofit.Builder()
         .client(createOkhttpClient())
         .baseUrl("http://192.168.2.82:8080/")
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(
+            Json {
+                ignoreUnknownKeys = true
+            }.asConverterFactory("application/json".toMediaType())
+        )
         .build()
 
 fun createOkhttpClient() : OkHttpClient =

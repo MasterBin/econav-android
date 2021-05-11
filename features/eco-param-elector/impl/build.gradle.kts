@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":features:eco-param-elector:api"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Features.ecoParamElector)
 
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.Compose.allBase())

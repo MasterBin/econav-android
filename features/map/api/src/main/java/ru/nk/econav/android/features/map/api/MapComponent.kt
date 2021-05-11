@@ -2,8 +2,8 @@ package ru.nk.econav.android.features.map.api
 
 import androidx.compose.ui.Modifier
 import ru.nk.econav.android.features.main.api.MainComponent
-import ru.nk.econav.core.common.decopmose.AppComponentContext
-import ru.nk.econav.core.common.decopmose.Content
+import ru.nk.econav.core.common.decompose.AppComponentContext
+import ru.nk.econav.core.common.decompose.Content
 
 interface MapComponent {
 

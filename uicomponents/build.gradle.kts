@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.Companion.getOrCreate
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -44,8 +46,8 @@ android {
 
 dependencies {
 
+    implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1")
     implementation(project(":core:ui"))
-    implementation(project(":features:mainscreen"))
     implementation(Deps.timber)
     implementation(Deps.Compose.allBase())
     implementation(Deps.Activity.all())

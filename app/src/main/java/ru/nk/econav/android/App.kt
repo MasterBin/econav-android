@@ -6,7 +6,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import ru.nk.econav.android.koin.koinModules
 import timber.log.Timber
 
 @Suppress("Unused")
@@ -45,9 +44,9 @@ class App : Application() {
 
     private fun initKoin() {
         startKoin {
-            if (BuildConfig.DEBUG) {
-                androidLogger(Level.DEBUG)
-            }
+//            if (BuildConfig.DEBUG) {
+//                androidLogger(Level.DEBUG)
+//            }
 
             androidContext(this@App)
             modules(ru.nk.econav.android.di.modules)

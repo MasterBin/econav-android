@@ -1,17 +1,21 @@
 package ru.nk.econav.android.eco_param_elector.impl
 
+import android.os.Parcelable
 import androidx.compose.material.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetpack.asState
+import com.arkivanov.decompose.instancekeeper.InstanceKeeper
+import com.arkivanov.decompose.instancekeeper.getOrCreate
+import com.arkivanov.decompose.statekeeper.consume
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.reduce
+import kotlinx.parcelize.Parcelize
 import ru.nk.econav.android.eco_param_elector.api.EcoParamElector
-import ru.nk.econav.core.common.decopmose.AppComponentContext
-import ru.nk.econav.core.common.decopmose.Content
+import ru.nk.econav.core.common.decompose.AppComponentContext
+import ru.nk.econav.core.common.decompose.Content
 
 class EcoParamElectorImpl(
     private val componentContext: AppComponentContext,
@@ -22,7 +26,15 @@ class EcoParamElectorImpl(
         EcoParamElectorView(modifier = modifier, component = this)
     }
 
-    private val _model = MutableValue(Model(deps.range.start))
+    private val state = stateKeeper.consume<Model>("SAVED") ?: Model(deps.range.start)
+
+    init {
+        stateKeeper.register("SAVED") {
+            model.value
+        }
+    }
+
+    private val _model = MutableValue(state)
     val floatRange = deps.range
     val model: Value<Model> = _model
 
@@ -34,9 +46,10 @@ class EcoParamElectorImpl(
         valueChanged.invoke(model.value.value)
     }
 
+    @Parcelize
     data class Model(
         val value: Float = 0f
-    )
+    ) : Parcelable
 }
 
 @Composable

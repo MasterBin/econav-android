@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:network:api"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.network)
 
     implementation(Deps.Retrofit.all())
     implementation(Deps.OkHttp.all())

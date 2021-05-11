@@ -3,17 +3,18 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:map-interface"))
-    implementation(project(":core:ui"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.mapInterface)
+    moduleDep(Modules.Core.ui)
 
-    implementation(project(":features:main:api"))
-    implementation(project(":features:routing:api"))
-    implementation(project(":features:ecoplaces:api"))
-    implementation(project(":features:eco-param-elector:api"))
+    moduleDep(Modules.Features.main)
+    moduleDep(Modules.Features.routing)
+    moduleDep(Modules.Features.ecoParamElector)
+    moduleDep(Modules.Features.userLocation)
 
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())
     implementation(Deps.OSMDroid.osm)
     implementation(Deps.Compose.allBase())
+    implementation(project(mapOf("path" to ":data:routing:models")))
 }

@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:map-interface"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.mapInterface)
 
     implementation(Deps.Compose.base())
 }

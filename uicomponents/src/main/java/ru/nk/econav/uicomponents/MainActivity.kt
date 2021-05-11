@@ -17,8 +17,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import ru.nk.econav.ui.components.CompassButton
 import ru.nk.econav.ui.components.DraggableBottomDrawer
 import ru.nk.econav.ui.components.Search
+import ru.nk.econav.ui.components.UserLocationButton
 import ru.nk.econav.ui.theme.AppTheme
 import kotlin.math.roundToInt
 
@@ -69,7 +71,7 @@ fun LittleScreen() {
     Column(
         Modifier
             .fillMaxSize()
-            .padding(vertical = 24.dp),
+            .padding(vertical = 24.dp, horizontal = 24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         var text by remember {
@@ -82,8 +84,9 @@ fun LittleScreen() {
                 text = it
             }
         )
-
         SwipeableSample()
+        CompassButton() {}
+        UserLocationButton() {}
     }
 }
 
@@ -116,13 +119,19 @@ fun BottomDrawer() {
                 }
             },
             drawerContent = {
-                BoxWithConstraints(Modifier.fillMaxSize().background(Color.Red)) {
+                BoxWithConstraints(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Red)) {
                     Text("manHeight is $maxHeight")
                     Text(modifier = Modifier.align(Alignment.BottomCenter), text ="HELLO")
                 }
             },
             drawerContentExpanded = {
-                BoxWithConstraints(Modifier.fillMaxSize().background(Color.Blue)) {
+                BoxWithConstraints(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Blue)) {
                     Text("manHeight is $maxHeight")
                     Text(modifier = Modifier.align(Alignment.BottomCenter), text ="HELLO")
                 }

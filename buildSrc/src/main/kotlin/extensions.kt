@@ -1,3 +1,4 @@
+import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 internal fun DependencyHandler.implementation(depName: String) {
@@ -23,5 +24,15 @@ internal fun DependencyHandler.api(depName: String) {
 fun DependencyHandler.implementation(depNames: List<String>) {
     depNames.forEach { dep ->
         add("implementation", dep)
+    }
+}
+
+fun DependencyHandler.moduleDep(vararg paths: String) {
+    moduleDep(paths.toList())
+}
+
+fun DependencyHandler.moduleDep(paths: List<String>) {
+    paths.forEach {
+        add("implementation", project(mapOf("path" to it)))
     }
 }

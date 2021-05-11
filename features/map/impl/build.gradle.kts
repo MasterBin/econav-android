@@ -3,10 +3,12 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:map-interface"))
-    implementation(project(":features:map:api"))
-    implementation(project(":features:main:api"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.mapInterface)
+
+    moduleDep(Modules.Features.map)
+    moduleDep(Modules.Features.main)
+
 
     implementation(Deps.OSMDroid.all())
     implementation(Deps.Compose.allBase())

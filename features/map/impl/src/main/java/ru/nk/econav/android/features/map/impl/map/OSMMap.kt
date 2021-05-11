@@ -1,6 +1,9 @@
 package ru.nk.econav.android.features.map.impl.map
 
+import android.content.res.Resources
 import android.os.Parcelable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -22,6 +25,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import ru.nk.econav.android.features.map.impl.R
 
@@ -60,6 +64,29 @@ fun OsmMap(
                         postInvalidateDelayed(20)
                     }
                 }
+                scope.launch {
+                    component.boundingBoxZoom.collect {
+                        zoomToBoundingBox(it.first, it.second)
+                    }
+                }
+                scope.launch {
+                    component.getLocationOverlay.collect {
+                        val overlay = MyLocationNewOverlay(mapView)
+                        overlays.add(overlay)
+                        component.locationFlow.emit(overlay)
+                    }
+                }
+                scope.launch {
+                    component.animateTo.collect {
+                        controller.animateTo(it)
+                    }
+                }
+
+                scope.launch {
+                    component.mapOffset.collect {
+                        setMapCenterOffset(it.first, it.second)
+                    }
+                }
             }
         },
     )
@@ -94,7 +121,15 @@ private fun rememberMapView(): MapView {
             id = R.id.composeMap
             setDestroyMode(false)
             setTileSource(TileSourceFactory.MAPNIK)
-//            isTilesScaledToDpi = true
+
+            isTilesScaledToDpi = true
+
+//            if (darkMode) {
+//                overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS)
+//            } else {
+//                overlayManager.tilesOverlay.setColorFilter(null)
+//            }
+
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
         }

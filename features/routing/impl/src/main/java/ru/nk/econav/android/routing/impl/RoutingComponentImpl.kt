@@ -1,66 +1,139 @@
 package ru.nk.econav.android.routing.impl
 
-import com.arkivanov.decompose.instancekeeper.InstanceKeeper
-import com.arkivanov.decompose.instancekeeper.getOrCreate
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import com.arkivanov.mvikotlin.extensions.coroutines.states
+import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.nk.econav.android.core.network.api.Networking
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.OverlayItem
+import org.osmdroid.views.overlay.Polyline
+import ru.nk.econav.android.data.routing.api.RoutingRepository
 import ru.nk.econav.android.routing.api.RoutingComponent
-import ru.nk.econav.android.routing.api.model.Route
-import ru.nk.econav.android.routing.api.model.RouteRequest
-import ru.nk.econav.android.routing.impl.data.Api
-import ru.nk.econav.android.routing.impl.data.PathRepositoryImpl
-import ru.nk.econav.core.common.decopmose.AppComponentContext
-import ru.nk.econav.core.common.util.convert
+import ru.nk.econav.android.routing.impl.util.toGeoPoint
+import ru.nk.econav.android.routing.impl.util.toLatLon
+import ru.nk.econav.core.common.decompose.AppComponentContext
+import ru.nk.econav.core.common.util.getStore
+import ru.nk.econav.core.common.util.ifNotNull
 
 class RoutingComponentImpl(
     private val componentContext: AppComponentContext,
     private val deps: RoutingComponent.Dependencies,
-    private val networking: Networking
+    private val routingRepository : RoutingRepository
 ) : RoutingComponent, RoutingComponent.Dependencies by deps,
     AppComponentContext by componentContext {
 
-    private val executor = instanceKeeper.getOrCreate { Executor(networking) }
+    private val store = instanceKeeper.getStore {
+        RoutingStoreProvider(
+            LoggingStoreFactory(DefaultStoreFactory),
+            routingRepository
+        ).create()
+    }
+
+    private val mapInterface = getMapInterface.invoke(lifecycle)
+
+    private val overlayPoints = ItemizedIconOverlay<OverlayItem>(
+        applicationContext,
+        mutableListOf(),
+        object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+            override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
+                return false
+            }
+
+            override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
+                return false
+            }
+        }
+    )
+
+    private val overlay = MapEventsOverlay(object : MapEventsReceiver {
+        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+            return false
+        }
+
+        override fun longPressHelper(p: GeoPoint): Boolean {
+            placePoint(p)
+            return store.state.routingState is RoutingStore.State.Routing.CreateRouteByPlacingPoints
+        }
+    })
+
+    private val polyline = Polyline()
 
     init {
+        mapInterface.add(polyline)
+        mapInterface.add(overlayPoints)
+        mapInterface.add(overlay)
+        initStore()
+    }
+
+    private fun initStore() {
         componentScope.launch {
-            executor.routeFlow.collect {
-                route.invoke(it)
+            store.states.collect { gstate ->
+                overlayPoints.removeAllItems()
+                polyline.setPoints(listOf())
+                when (val state = gstate.routingState) {
+                    is RoutingStore.State.Routing.CreateRouteByPlacingPoints -> {
+                        state.startPoint.ifNotNull {
+                            overlayPoints.addItem(OverlayItem(null, null, it.toGeoPoint()).apply {
+                                setMarker(applicationContext.getDrawable(R.drawable.ic_point_start))
+                            })
+                        }
+                        state.endPoint.ifNotNull {
+                            overlayPoints.addItem(OverlayItem(null, null, it.toGeoPoint()).apply {
+                                setMarker(applicationContext.getDrawable(R.drawable.ic_point_end))
+                            })
+                        }
+                    }
+                    is RoutingStore.State.Routing.RouteCreated -> {
+                        routeReceived.invoke(state.route)
+                        state.route.also {
+                            overlayPoints.addItem(
+                                OverlayItem(
+                                    null,
+                                    null,
+                                    it.from.toGeoPoint()
+                                ).apply {
+                                    setMarker(applicationContext.getDrawable(R.drawable.ic_point_start))
+                                }
+                            )
+                            overlayPoints.addItem(
+                                OverlayItem(
+                                    null,
+                                    null,
+                                    it.to.toGeoPoint()
+                                ).apply {
+                                    setMarker(applicationContext.getDrawable(R.drawable.ic_point_end))
+                                })
+                            polyline.setPoints(it.polyline.map { l -> l.toGeoPoint() })
+                            mapInterface.zoomToBoundingBox(polyline.bounds.clone().increaseByScale(2.3f), true)
+                        }
+                    }
+                }
+                mapInterface.invalidateMap()
+            }
+        }
+        componentScope.launch {
+            ecoParam.collect {
+                if (ecoParamRange.contains(it)) {
+                    store.accept(RoutingStore.Intent.ChangeEcoParam(it))
+                }
             }
         }
     }
 
-    override fun requestRoute(request: RouteRequest) = executor.requestRoute(request)
-}
-
-//FIXME: add supertype, deal with flows
-private class Executor(
-    private val networking: Networking
-) : InstanceKeeper.Instance {
-    private val coroutineScope = MainScope()
-
-    private val routeReceived = MutableSharedFlow<Route>()
-    val routeFlow: Flow<Route> = routeReceived
-
-    private val api = networking.createApi(Api::class.java)
-    private val pathRepository = PathRepositoryImpl(api)
-
-    fun requestRoute(request: RouteRequest) {
-        coroutineScope.launch {
-            val route = pathRepository.getPath(
-                start = request.from,
-                end = request.to,
-                ecoParam = request.parameterRange.convert(request.ecoParameter, 0f..1f)
-            )
-            routeReceived.emit(route)
-        }
+    private fun placePoint(p: GeoPoint) {
+        store.accept(RoutingStore.Intent.PlacePoint(p.toLatLon()))
     }
 
-    override fun onDestroy() {
-        coroutineScope.cancel()
+    override fun startPlacingPoints() {
+        store.accept(RoutingStore.Intent.CreateRouteByPlacingPoints)
     }
+
+    override fun clearPoints() {
+        store.accept(RoutingStore.Intent.Cancel)
+    }
+
 }

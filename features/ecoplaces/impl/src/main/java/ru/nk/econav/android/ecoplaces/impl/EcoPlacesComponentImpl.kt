@@ -17,7 +17,7 @@ import ru.nk.econav.android.ecoplaces.api.EcoPlacesComponent
 import ru.nk.econav.android.ecoplaces.impl.data.Api
 import ru.nk.econav.android.ecoplaces.impl.data.EcoPlace
 import ru.nk.econav.android.ecoplaces.impl.data.EcoPlacesRepositoryImpl
-import ru.nk.econav.core.common.decopmose.AppComponentContext
+import ru.nk.econav.core.common.decompose.AppComponentContext
 
 class EcoPlacesComponentImpl(
     private val componentContext: AppComponentContext,
@@ -54,9 +54,9 @@ class EcoPlacesComponentImpl(
         componentScope.launch {
             executor.flow.collect { lst ->
                 pointsOverlay.removeAllItems()
-                pointsOverlay.addItems(lst.map {
-                    OverlayItem(null, null, null, GeoPoint(it.location.lat, it.location.lon))
-                })
+//                pointsOverlay.addItems(lst.map {
+////                    OverlayItem(null, null, null, GeoPoint(it.location.lat, it.location.lon))
+//                })
                 mapInterface.invalidateMap()
             }
         }

@@ -3,9 +3,10 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:map-interface"))
-    implementation(project(":features:eco-param-elector:api"))
+    moduleDep(Modules.Core.common)
+    moduleDep(Modules.Core.mapInterface)
+
+    moduleDep(Modules.Data.Routing.models)
 
     implementation(Deps.coroutines)
 }

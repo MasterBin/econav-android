@@ -30,7 +30,7 @@ object Deps {
 
     const val timber = "com.jakewharton.timber:timber:${Vers.TIMBER}"
 
-    const val koinScope = "org.koin:koin-androidx-scope:${Vers.KOIN}"
+    const val koin = "io.insert-koin:koin-android-ext:${Vers.KOIN}"
 
     const val epoxy = "com.airbnb.android:epoxy:${Vers.EPOXY}"
     const val epoxyProcessor = "com.airbnb.android:epoxy-processor:${Vers.EPOXY}"
@@ -99,9 +99,10 @@ object Deps {
     const val photoView = "com.github.chrisbanes:PhotoView:${Vers.PHOTO_VIEW}"
 
     object Accompanist {
-        private const val version = "0.7.0"
+        private const val version = "0.9.1"
 
         const val insets = "com.google.accompanist:accompanist-insets:$version"
+        const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:$version"
     }
 
     object Firebase {
@@ -126,7 +127,7 @@ object Deps {
     }
 
     object Decompose {
-        private const val version = "0.2.1"
+        private const val version = "0.2.4"
 
         const val common = "com.arkivanov.decompose:decompose:$version"
         const val androidExt = "com.arkivanov.decompose:extensions-android:$version"
@@ -136,7 +137,7 @@ object Deps {
     }
 
     object Activity {
-        private const val version = "1.3.0-alpha05"
+        private const val version = "1.3.0-alpha07"
 
         const val activity = "androidx.activity:activity:$version"
         const val ktx = "androidx.activity:activity-ktx:$version"
@@ -146,7 +147,7 @@ object Deps {
     }
 
     object Compose {
-        const val version = "1.0.0-beta03"
+        const val version = "1.0.0-beta06"
 
         const val ui = "androidx.compose.ui:ui:$version"
         const val material = "androidx.compose.material:material:$version"
@@ -175,7 +176,7 @@ fun DependencyHandler.conductor() {
 }
 
 fun DependencyHandler.koin() {
-    implementation(Deps.koinScope)
+    implementation(Deps.koin)
 }
 
 fun DependencyHandler.epoxy() {

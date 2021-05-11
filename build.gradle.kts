@@ -1,4 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.gradle.util.GradleVersion.URL
+import java.net.URI
 
 plugins {
     id("com.github.ben-manes.versions").version("0.38.0")
@@ -6,17 +8,18 @@ plugins {
 
 buildscript {
     val kotlinVersion by extra(Vers.KOTLIN)
-    val compose_version by extra("1.0.0-beta01")
     repositories {
         jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha14")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha15")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
         classpath("com.google.gms:google-services:4.3.5")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.5.2")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-android-extensions:$kotlinVersion")
     }
 }
 
@@ -28,6 +31,18 @@ allprojects {
         maven(url = "https://jitpack.io")
         maven(url = "https://dl.bintray.com/arkivanov/maven")
         maven(url = "https://dl.bintray.com/badoo/maven")
+        maven {
+            url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
+            authentication {
+                create<org.gradle.authentication.http.BasicAuthentication>("basic")
+            }
+            credentials {
+                username = "mapbox"
+                password = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(
+                    rootDir
+                ).getProperty("password")
+            }
+        }
     }
 }
 

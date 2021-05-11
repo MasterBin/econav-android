@@ -1,7 +1,7 @@
 package ru.nk.econav.android.ecoplaces.api
 
 import ru.nk.econav.android.core.mapinterface.GetMapInterface
-import ru.nk.econav.core.common.decopmose.AppComponentContext
+import ru.nk.econav.core.common.decompose.AppComponentContext
 
 interface EcoPlacesComponent {
 

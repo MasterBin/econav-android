@@ -1,11 +1,10 @@
 package ru.nk.econav.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +13,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.nk.econav.ui.R
+import ru.nk.econav.android.core.resources.R
 import ru.nk.econav.ui.basic.TextFieldWithHint
 import ru.nk.econav.ui.theme.AppTheme
 
@@ -28,6 +27,7 @@ fun Search(
     Surface(
         modifier = modifier.wrapContentSize(),
         shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
         elevation = 20.dp
     ) {
         Row(
@@ -39,6 +39,7 @@ fun Search(
                     .align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_search),
                 contentDescription = null,
+                tint = contentColorFor(MaterialTheme.colors.surface)
             )
             TextFieldWithHint(
                 value = text,

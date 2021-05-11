@@ -1,13 +1,14 @@
 object Vers {
     const val COROUTINES = "1.4.3"
-    const val KOTLIN_SERIALIZATION = "1.1.0"
+    const val KOTLIN_SERIALIZATION = "1.2.0"
 
     const val KOTLIN = "1.4.32"
     const val JUNIT = "4.13.2"
     const val DESUGAR_JDL_LIBS = "1.0.10"
 
+
     const val MOCKITO = "3.5.13"
-    const val CORE_CTX = "1.3.1"
+    const val CORE_CTX = "1.3.2"
     const val APP_COMPAT = "1.2.0"
     const val CONSTRAINT_LAYOUT = "2.0.2"
     const val MATERIAL = "1.2.1"
@@ -21,7 +22,7 @@ object Vers {
 
     const val LEAK_CANARY = "2.7"
 
-    const val KOIN = "2.2.2"
+    const val KOIN = "3.0.1"
 
     const val EPOXY = "4.1.0"
 
@@ -35,7 +36,7 @@ object Vers {
 
     const val SWITCH_BUTTON = "0.0.3"
 
-    const val COIL = "1.1.0"
+    const val COIL = "1.2.1"
 
     const val PHOTO_VIEW = "2.3.0"
 }

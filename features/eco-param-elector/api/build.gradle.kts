@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
+    moduleDep(Modules.Core.common)
     implementation(Deps.Compose.base())
 }
