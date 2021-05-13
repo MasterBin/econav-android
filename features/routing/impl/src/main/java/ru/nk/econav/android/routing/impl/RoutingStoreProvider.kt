@@ -7,9 +7,9 @@ import com.arkivanov.mvikotlin.core.store.create
 import com.arkivanov.mvikotlin.extensions.coroutines.SuspendExecutor
 import kotlinx.coroutines.*
 import ru.nk.econav.android.data.routing.api.RoutingRepository
-import ru.nk.econav.android.data.routing.models.LatLon
 import ru.nk.econav.android.data.routing.models.Route
 import ru.nk.econav.android.routing.impl.RoutingStore.*
+import ru.nk.econav.core.common.models.LatLon
 
 class RoutingStoreProvider(
     private val storeFactory: StoreFactory,

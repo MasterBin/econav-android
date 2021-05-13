@@ -14,6 +14,9 @@ dependencies {
     moduleDep(Modules.Data.Routing.api)
     moduleDep(ModulesUnsafe.Data.Routing.impl)
 
+    moduleDep(Modules.Data.Places.api)
+    moduleDep(ModulesUnsafe.Data.Places.impl)
+
     moduleDep(Modules.Features.ecoParamElector)
     moduleDep(ModulesUnsafe.Features.ecoParamElectorImpl)
 
@@ -28,4 +31,10 @@ dependencies {
 
     moduleDep(Modules.Features.routing)
     moduleDep(ModulesUnsafe.Features.routingImpl)
+
+    moduleDep(Modules.Features.general)
+    moduleDep(ModulesUnsafe.Features.generalImpl)
+
+    moduleDep(Modules.Features.searchPlaces)
+    moduleDep(ModulesUnsafe.Features.searchPlaces)
 }

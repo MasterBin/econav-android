@@ -7,8 +7,8 @@ import ru.nk.econav.android.data.routing.api.RoutingRepository
 import ru.nk.econav.android.data.routing.impl.api.Api
 import ru.nk.econav.android.data.routing.impl.requests.RouteApiRequest
 import ru.nk.econav.android.data.routing.impl.util.PolylineUtil
-import ru.nk.econav.android.data.routing.models.LatLon
 import ru.nk.econav.android.data.routing.models.Route
+import ru.nk.econav.core.common.models.LatLon
 
 class RoutingRepositoryImpl(
     private val networking: Networking

@@ -36,3 +36,13 @@ fun DependencyHandler.moduleDep(paths: List<String>) {
         add("implementation", project(mapOf("path" to it)))
     }
 }
+
+fun DependencyHandler.moduleDepApi(vararg paths: String) {
+    moduleDepApi(paths.toList())
+}
+
+fun DependencyHandler.moduleDepApi(paths: List<String>) {
+    paths.forEach {
+        add("api", project(mapOf("path" to it)))
+    }
+}

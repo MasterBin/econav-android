@@ -15,8 +15,12 @@ object Modules {
 
     object Data {
         object Routing {
-            val api = listOf(":data:routing:api", ":data:routing:models")
             const val models = ":data:routing:models"
+            val api = listOf(":data:routing:api", models)
+        }
+        object Places {
+            const val models = ":data:places:models"
+            val api = listOf(":data:places:api", models)
         }
     }
 
@@ -27,6 +31,8 @@ object Modules {
         const val map = ":features:map:api"
         const val routing = ":features:routing:api"
         const val userLocation = ":features:userlocation:api"
+        const val searchPlaces = ":features:search-places:api"
+        const val placeDetail = ":features:place-detail:api"
     }
 }
 
@@ -42,6 +48,9 @@ object ModulesUnsafe {
         object Routing {
             const val impl = ":data:routing:impl"
         }
+        object Places {
+            const val impl = ":data:places:impl"
+        }
     }
 
     object Features {
@@ -51,6 +60,8 @@ object ModulesUnsafe {
         const val mapImpl = ":features:map:impl"
         const val routingImpl = ":features:routing:impl"
         const val userLocationImpl = ":features:userlocation:impl"
+        const val searchPlaces = ":features:search-places:impl"
+        const val placeDetail = ":features:place-detail:impl"
     }
 
 }

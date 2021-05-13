@@ -6,6 +6,7 @@ plugins {
 dependencies {
     moduleDep(Modules.Data.Routing.api)
     moduleDep(Modules.Core.network)
+    moduleDep(Modules.Core.common)
 
     implementation(Deps.Retrofit.base())
     implementation(Deps.coroutines)

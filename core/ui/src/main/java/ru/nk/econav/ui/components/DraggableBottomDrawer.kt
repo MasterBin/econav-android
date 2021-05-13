@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.nk.econav.android.core.resources.R
+import ru.nk.econav.ui.components.DraggableBottomDrawerState.*
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
@@ -34,13 +35,13 @@ fun DraggableBottomDrawer(
     border: BorderStroke? = null,
     elevation: Dp = 20.dp,
     hidden: Boolean = false,
+    swipeableState: SwipeableState<DraggableBottomDrawerState> = rememberSwipeableState(General),
     drawerRatio: Float = 0.5f,
     drawerContent: @Composable () -> Unit = @Composable {},
     drawerContentExpanded: @Composable () -> Unit = @Composable {},
     onDrawerContent: @Composable () -> Unit = @Composable {}
 ) {
     check(drawerRatio in 0f..1f)
-    val swipeableState = rememberSwipeableState(1)
     val drawerRatioInner: Float = 1 - drawerRatio
 
     BoxWithConstraints(modifier.fillMaxSize()) {
@@ -52,9 +53,9 @@ fun DraggableBottomDrawer(
         }
 
         val anchors = mapOf(
-            0f to 0,
-            (fullHeight * drawerRatioInner) to 1,
-            (fullHeight - peekHeightPx) to 2
+            0f to Expanded,
+            (fullHeight * drawerRatioInner) to General,
+            (fullHeight - peekHeightPx) to Hidden
         )
 
         val swipeableModifier = Modifier.swipeable(
@@ -68,9 +69,9 @@ fun DraggableBottomDrawer(
 
         LaunchedEffect(key1 = hidden) {
             if (hidden) {
-                swipeableState.animateTo(2)
+                swipeableState.animateTo(Hidden)
             } else {
-                swipeableState.animateTo(1)
+                swipeableState.animateTo(General)
             }
         }
 
@@ -145,5 +146,8 @@ fun DraggableBottomDrawer(
             }
         }
     }
+}
 
+enum class DraggableBottomDrawerState() {
+    Hidden, General, Expanded
 }

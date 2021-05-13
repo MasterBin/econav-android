@@ -1,6 +1,6 @@
 package ru.nk.econav.android.data.routing.impl.util
 
-import ru.nk.econav.android.data.routing.models.LatLon
+import ru.nk.econav.core.common.models.LatLon
 
 
 object PolylineUtil {

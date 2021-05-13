@@ -8,9 +8,7 @@ dependencies {
     moduleDep(Modules.Core.ui)
 
     moduleDep(Modules.Features.main)
-    moduleDep(Modules.Features.routing)
-    moduleDep(Modules.Features.ecoParamElector)
-    moduleDep(Modules.Features.userLocation)
+    moduleDep(Modules.Features.general)
 
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())

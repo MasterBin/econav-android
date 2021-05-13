@@ -5,10 +5,7 @@ plugins {
 dependencies {
     moduleDep(Modules.Core.common)
     moduleDep(Modules.Core.mapInterface)
-    moduleDep(Modules.Features.routing)
-    moduleDep(Modules.Features.ecoParamElector)
-    moduleDep(Modules.Features.userLocation)
-
+    moduleDep(Modules.Features.general)
 
 
     implementation(Deps.Decompose.common)

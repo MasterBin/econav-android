@@ -1,37 +1,37 @@
 package ru.nk.econav.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.nk.econav.android.core.resources.R
 import ru.nk.econav.ui.basic.TextFieldWithHint
-import ru.nk.econav.ui.theme.AppTheme
 
 @Composable
 fun Search(
-    modifier : Modifier = Modifier,
-    hintText: String,
+    modifier: Modifier = Modifier,
+    hintText: String = stringResource(R.string.search),
     text: String,
+    enabled: Boolean = true,
     onTextChanged: (String) -> Unit
 ) {
     Surface(
         modifier = modifier.wrapContentSize(),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-        elevation = 20.dp
+        border = BorderStroke(2.dp, MaterialTheme.colors.secondary),
     ) {
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
@@ -41,12 +41,22 @@ fun Search(
                 contentDescription = null,
                 tint = contentColorFor(MaterialTheme.colors.surface)
             )
-            TextFieldWithHint(
-                value = text,
-                hintText = hintText,
-                onValueChange = onTextChanged,
-                maxLines = 1
-            )
+            if (enabled) {
+                TextFieldWithHint(
+                    value = text,
+                    hintText = hintText,
+                    onValueChange = onTextChanged,
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.subtitle1
+                )
+            } else {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = hintText,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.subtitle1
+                )
+            }
         }
     }
 }
@@ -56,14 +66,12 @@ fun Search(
 )
 @Composable
 private fun Preview() {
-    AppTheme {
-        var text by remember {
-            mutableStateOf("")
-        }
-        Search(
-            hintText = "Search",
-            text = text,
-            onTextChanged = { text = it }
-        )
+    var text by remember {
+        mutableStateOf("")
     }
+    Search(
+        hintText = "Search",
+        text = text,
+        onTextChanged = { text = it }
+    )
 }
