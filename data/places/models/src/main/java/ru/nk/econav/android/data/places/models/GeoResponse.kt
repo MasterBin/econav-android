@@ -1,5 +1,7 @@
 package ru.nk.econav.android.data.places.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.nk.econav.core.common.models.LatLon
@@ -10,6 +12,7 @@ data class GeoResponse(
 )
 
 @Serializable
+@Parcelize
 data class GeoFeature(
     @SerialName("name")val name : String,
     @SerialName("address")val address : String,
@@ -17,12 +20,13 @@ data class GeoFeature(
     @SerialName("bbox") val bbox : BoundingBox?,
     @SerialName("matchingText") val matchingText : String?,
     @SerialName("distanceTo") val distanceTo : String?
-)
+) : Parcelable
 
 @Serializable
+@Parcelize
 data class BoundingBox(
     val east : Double,
     val north : Double,
     val west : Double,
     val south : Double
-)
+) : Parcelable

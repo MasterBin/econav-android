@@ -22,7 +22,7 @@ class MapComponentImpl(
         innerMapComponent.createInterface(it)
     }
 
-    val mainComponentChild = oneChild {
+    val mainComponentChild = oneChild("main") {
         children.mainComponent.invoke(
             it,
             object : MainComponent.Dependencies {

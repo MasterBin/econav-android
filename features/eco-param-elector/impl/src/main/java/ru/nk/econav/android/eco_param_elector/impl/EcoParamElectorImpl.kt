@@ -16,6 +16,7 @@ import kotlinx.parcelize.Parcelize
 import ru.nk.econav.android.eco_param_elector.api.EcoParamElector
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
+import ru.nk.econav.ui.components.EcoParamSlider
 
 class EcoParamElectorImpl(
     private val componentContext: AppComponentContext,
@@ -59,7 +60,7 @@ fun EcoParamElectorView(
 ) {
     val model by component.model.asState()
 
-    Slider(
+    EcoParamSlider(
         modifier = modifier,
         value = model.value,
         valueRange = component.floatRange,

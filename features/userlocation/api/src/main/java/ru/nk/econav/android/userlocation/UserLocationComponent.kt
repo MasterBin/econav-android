@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import ru.nk.econav.android.core.mapinterface.GetMapInterface
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
+import ru.nk.econav.core.common.models.LatLon
 import ru.nk.econav.core.common.util.OutEvent
 
 interface UserLocationComponent {
@@ -13,7 +14,8 @@ interface UserLocationComponent {
 
     interface Dependencies {
         val getMapInterface : GetMapInterface
-        val userLocation : OutEvent<Location>
+        val userLocation : OutEvent<LatLon>
+        val permissionNotGranted : OutEvent<Unit>
     }
 
     fun interface Factory {

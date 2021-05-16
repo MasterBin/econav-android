@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Поиск</string>
+    <string name="ecology_of_route">Экологичность маршрута</string>
 </resources>

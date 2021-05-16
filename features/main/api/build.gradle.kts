@@ -7,6 +7,7 @@ dependencies {
     moduleDep(Modules.Core.mapInterface)
     moduleDep(Modules.Features.general)
 
+    moduleDep(Modules.Features.placeDetail)
 
     implementation(Deps.Decompose.common)
     implementation(Deps.Compose.base())

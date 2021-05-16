@@ -9,6 +9,9 @@ dependencies {
 
     moduleDep(Modules.Features.main)
     moduleDep(Modules.Features.general)
+    moduleDep(Modules.Features.placeDetail)
+
+    moduleDep(Modules.Data.Places.models)
 
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())

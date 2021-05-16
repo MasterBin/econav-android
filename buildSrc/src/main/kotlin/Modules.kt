@@ -32,7 +32,7 @@ object Modules {
         const val routing = ":features:routing:api"
         const val userLocation = ":features:userlocation:api"
         const val searchPlaces = ":features:search-places:api"
-        const val placeDetail = ":features:place-detail:api"
+        const val placeDetail = ":features:place-details:api"
     }
 }
 
@@ -61,7 +61,7 @@ object ModulesUnsafe {
         const val routingImpl = ":features:routing:impl"
         const val userLocationImpl = ":features:userlocation:impl"
         const val searchPlaces = ":features:search-places:impl"
-        const val placeDetail = ":features:place-detail:impl"
+        const val placeDetail = ":features:place-details:impl"
     }
 
 }

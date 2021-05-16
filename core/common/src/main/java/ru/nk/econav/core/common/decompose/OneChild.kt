@@ -27,16 +27,11 @@ sealed class ChildOneChild<out T : Any> {
     object Hidden : ChildOneChild<Nothing>()
 }
 
-private sealed class ChildConf : Parcelable {
-    @Parcelize
-    object Showed : ChildConf()
-
-    @Parcelize
-    object Hidden : ChildConf()
-}
+@Parcelize
+data class ChildConf(val show : Boolean) : Parcelable
 
 fun <T : Any> AppComponentContext.oneChild(
-    key : String = "Default",
+    key : String,
     showed: Boolean = true,
     create: (AppComponentContext) -> T
 ): OneChild<T> = OneChildImpl<T>(key,this, showed, create)
@@ -47,31 +42,31 @@ private class OneChildImpl <T: Any>(
     showed: Boolean = true,
     create: (AppComponentContext) -> T
 ) : OneChild<T> {
+
     val router = appComponentContext.appRouter<ChildConf, Any>(
-        initialConfiguration = if (showed) ChildConf.Showed else ChildConf.Hidden,
+        initialConfiguration = ChildConf(showed),
         key = key,
         childFactory = { c, ctx ->
-            when (c) {
-                ChildConf.Hidden -> {
-                    Unit
-                }
-                ChildConf.Showed -> create(ctx)
+            if (c.show) {
+                create(ctx)
+            } else {
+                Unit
             }
         }
     )
 
     override fun show() {
-        router.replaceCurrent(ChildConf.Showed)
+        router.replaceCurrent(ChildConf(true))
     }
 
     override fun hide() {
-        router.replaceCurrent(ChildConf.Hidden)
+        router.replaceCurrent(ChildConf(true))
     }
 
     @Suppress("UNCHECKED_CAST")
     override val state: Value<ChildOneChild<T>>
         get() = router.state.map {
-            if (it.activeChild.configuration is ChildConf.Showed) {
+            if (it.activeChild.configuration.show) {
                 ChildOneChild.Showed(it.activeChild.instance as T)
             } else {
                 ChildOneChild.Hidden

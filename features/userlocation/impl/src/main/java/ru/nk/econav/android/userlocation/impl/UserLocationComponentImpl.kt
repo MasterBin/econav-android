@@ -1,10 +1,12 @@
 package ru.nk.econav.android.userlocation.impl
 
 import android.Manifest
+import android.location.Location
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.graphics.drawable.toBitmap
+import com.arkivanov.decompose.lifecycle.subscribe
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
@@ -14,6 +16,7 @@ import ru.nk.econav.android.userlocation.UserLocationComponent
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
 import ru.nk.econav.core.common.decompose.activityResult
+import ru.nk.econav.core.common.models.LatLon
 import ru.nk.econav.ui.components.UserLocationButton
 
 class UserLocationComponentImpl(
@@ -50,15 +53,32 @@ class UserLocationComponentImpl(
         val locationProvider = GpsMyLocationProvider(applicationContext)
 
         locationProvider.startLocationProvider { location, source ->
-            userLocation.invoke(location)
+            userLocation.invoke(LatLon(location.latitude, location.longitude))
         }
+        
+        lifecycle.subscribe(
+            onPause = {
+                locationProvider.stopLocationProvider()
+            },
+            onResume = {
+                locationProvider.startLocationProvider { location, source ->
+                    userLocation.invoke(LatLon(location.latitude, location.longitude))
+                }
+            },
+            onDestroy = {
+                locationProvider.destroy()
+            }
+        )
 
-        locationInterface.enableMyLocation(locationProvider)
+        locationInterface.enableMyLocation(GpsMyLocationProvider(applicationContext))
         locationInterface.setUserIcon(
             applicationContext.getDrawable(R.drawable.ic_user_location)!!.toBitmap()
         )
 
         locationInterface.enableFollowLocation()
+        locationInterface.getMyLocation()?.let{
+            userLocation.invoke(LatLon(it.latitude, it.longitude))
+        }
     }
 
     private fun getLocationInterface() {

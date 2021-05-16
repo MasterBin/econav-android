@@ -51,7 +51,7 @@ fun General(
 fun DrawerContentExpanded(
     component: GeneralComponentImpl
 ) {
-    OneChild(state =component.searchPlacesComponent.state) {
+    OneChild(state = component.searchPlacesComponent.state) {
         it.instance.render(
             Modifier.fillMaxSize()
         ).invoke()
@@ -62,7 +62,7 @@ fun DrawerContentExpanded(
 @Composable
 fun DrawerContent(
     component: GeneralComponentImpl,
-    swipeableState : SwipeableState<DraggableBottomDrawerState>
+    swipeableState: SwipeableState<DraggableBottomDrawerState>
 ) {
     val scope = rememberCoroutineScope()
 

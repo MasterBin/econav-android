@@ -14,7 +14,7 @@ interface SearchPlacesComponent {
 
     interface Dependencies {
         val userLocationFlow : Flow<LatLon>
-        val foundItem : OutEvent<GeoFeature>
+        val placeSelected : OutEvent<GeoFeature>
     }
 
     fun interface Factory {

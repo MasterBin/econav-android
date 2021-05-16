@@ -37,4 +37,7 @@ dependencies {
 
     moduleDep(Modules.Features.searchPlaces)
     moduleDep(ModulesUnsafe.Features.searchPlaces)
+
+    moduleDep(Modules.Features.placeDetail)
+    moduleDep(ModulesUnsafe.Features.placeDetail)
 }

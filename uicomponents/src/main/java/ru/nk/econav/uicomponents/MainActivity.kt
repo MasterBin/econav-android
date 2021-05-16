@@ -89,6 +89,12 @@ fun LittleScreen() {
             subtitle = "8502 Preston Rd. Inglewood, Maine 98380",
             distanceTo = "12212 m"
         ) {}
+        RoundedButton(text = "Route to") {}
+
+        var value by remember {
+            mutableStateOf(0f)
+        }
+        EcoParamSlider(value = value, onValueChange = { value = it })
     }
 }
 

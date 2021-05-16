@@ -1,6 +1,5 @@
 package ru.nk.econav.android.features.searchplaces.impl
 
-import android.widget.Toast
 import androidx.compose.ui.Modifier
 import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -9,7 +8,6 @@ import kotlinx.coroutines.launch
 import ru.nk.econav.android.data.places.api.PlacesRepository
 import ru.nk.econav.android.data.places.models.GeoFeature
 import ru.nk.econav.android.features.searchplaces.api.SearchPlacesComponent
-import ru.nk.econav.android.features.searchplaces.impl.store.SearchPlacesStore
 import ru.nk.econav.android.features.searchplaces.impl.store.SearchPlacesStore.Intent
 import ru.nk.econav.android.features.searchplaces.impl.store.SearchPlacesStoreProvider
 import ru.nk.econav.core.common.decompose.AppComponentContext
@@ -50,8 +48,7 @@ class SearchPlacesComponentImpl(
     }
 
     fun onItemClicked(item : GeoFeature) {
-        Toast.makeText(applicationContext, item.address, Toast.LENGTH_LONG).show()
-        //TODO:
+        deps.placeSelected.invoke(item)
     }
 
     private fun userLocationChanged(location : LatLon) {

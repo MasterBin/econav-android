@@ -142,6 +142,7 @@ class InnerMapComponent(
 
             init {
                 lifecycle.subscribe(onDestroy = {
+                    disableMyLocation()
                     overlay = null
                 })
             }

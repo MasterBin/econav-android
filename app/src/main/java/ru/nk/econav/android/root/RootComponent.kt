@@ -26,7 +26,7 @@ class RootComponent(
     private val componentContext: AppComponentContext
 ) : AppComponentContext by componentContext, KoinComponent {
 
-    private val mainComponent = oneChild {
+    private val mainComponent = oneChild("main") {
         getKoin().get<MapComponent.Factory>().invoke(it)
     }
 

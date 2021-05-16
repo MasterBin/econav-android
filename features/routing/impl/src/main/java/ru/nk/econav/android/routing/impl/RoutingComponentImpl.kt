@@ -5,24 +5,19 @@ import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.osmdroid.events.MapEventsReceiver
-import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.ItemizedIconOverlay
-import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.OverlayItem
 import org.osmdroid.views.overlay.Polyline
 import ru.nk.econav.android.data.routing.api.RoutingRepository
 import ru.nk.econav.android.routing.api.RoutingComponent
 import ru.nk.econav.android.routing.impl.util.toGeoPoint
-import ru.nk.econav.android.routing.impl.util.toLatLon
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.util.getStore
-import ru.nk.econav.core.common.util.ifNotNull
 
 class RoutingComponentImpl(
     private val componentContext: AppComponentContext,
     private val deps: RoutingComponent.Dependencies,
-    private val routingRepository : RoutingRepository
+    private val routingRepository: RoutingRepository
 ) : RoutingComponent, RoutingComponent.Dependencies by deps,
     AppComponentContext by componentContext {
 
@@ -49,23 +44,11 @@ class RoutingComponentImpl(
         }
     )
 
-    private val overlay = MapEventsOverlay(object : MapEventsReceiver {
-        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
-            return false
-        }
-
-        override fun longPressHelper(p: GeoPoint): Boolean {
-            placePoint(p)
-            return store.state.routingState is RoutingStore.State.Routing.CreateRouteByPlacingPoints
-        }
-    })
-
     private val polyline = Polyline()
 
     init {
         mapInterface.add(polyline)
         mapInterface.add(overlayPoints)
-        mapInterface.add(overlay)
         initStore()
     }
 
@@ -75,30 +58,21 @@ class RoutingComponentImpl(
                 overlayPoints.removeAllItems()
                 polyline.setPoints(listOf())
                 when (val state = gstate.routingState) {
-                    is RoutingStore.State.Routing.CreateRouteByPlacingPoints -> {
-                        state.startPoint.ifNotNull {
-                            overlayPoints.addItem(OverlayItem(null, null, it.toGeoPoint()).apply {
-                                setMarker(applicationContext.getDrawable(R.drawable.ic_point_start))
-                            })
-                        }
-                        state.endPoint.ifNotNull {
-                            overlayPoints.addItem(OverlayItem(null, null, it.toGeoPoint()).apply {
-                                setMarker(applicationContext.getDrawable(R.drawable.ic_point_end))
-                            })
-                        }
-                    }
                     is RoutingStore.State.Routing.RouteCreated -> {
                         routeReceived.invoke(state.route)
                         state.route.also {
-                            overlayPoints.addItem(
-                                OverlayItem(
-                                    null,
-                                    null,
-                                    it.from.toGeoPoint()
-                                ).apply {
-                                    setMarker(applicationContext.getDrawable(R.drawable.ic_point_start))
-                                }
-                            )
+                            if (!state.routeReq.isStartFromUserLocation) {
+                                overlayPoints.addItem(
+                                    OverlayItem(
+                                        null,
+                                        null,
+                                        it.from.toGeoPoint()
+                                    ).apply {
+                                        setMarker(applicationContext.getDrawable(R.drawable.ic_point_start))
+                                    }
+                                )
+                            }
+
                             overlayPoints.addItem(
                                 OverlayItem(
                                     null,
@@ -107,14 +81,22 @@ class RoutingComponentImpl(
                                 ).apply {
                                     setMarker(applicationContext.getDrawable(R.drawable.ic_point_end))
                                 })
+
                             polyline.setPoints(it.polyline.map { l -> l.toGeoPoint() })
-                            mapInterface.zoomToBoundingBox(polyline.bounds.clone().increaseByScale(2.3f), true)
+                            mapInterface.zoomToBoundingBox(
+                                polyline.bounds.clone().increaseByScale(2.3f), true
+                            )
                         }
                     }
                 }
                 mapInterface.invalidateMap()
             }
         }
+        initEcoParamFlow()
+        initRouteRequest()
+    }
+
+    private fun initEcoParamFlow() {
         componentScope.launch {
             ecoParam.collect {
                 if (ecoParamRange.contains(it)) {
@@ -124,16 +106,13 @@ class RoutingComponentImpl(
         }
     }
 
-    private fun placePoint(p: GeoPoint) {
-        store.accept(RoutingStore.Intent.PlacePoint(p.toLatLon()))
+    private fun initRouteRequest() {
+        componentScope.launch {
+            routeRequest.collect {
+                store.accept(RoutingStore.Intent.RouteRequest(it))
+            }
+        }
     }
 
-    override fun startPlacingPoints() {
-        store.accept(RoutingStore.Intent.CreateRouteByPlacingPoints)
-    }
-
-    override fun clearPoints() {
-        store.accept(RoutingStore.Intent.Cancel)
-    }
 
 }
