@@ -10,12 +10,14 @@ dependencies {
     moduleDep(Modules.Features.main)
     moduleDep(Modules.Features.general)
     moduleDep(Modules.Features.placeDetail)
+    moduleDep(Modules.Features.navigation)
 
     moduleDep(Modules.Data.Places.models)
+    moduleDep(Modules.Data.Routing.models)
 
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())
     implementation(Deps.OSMDroid.osm)
     implementation(Deps.Compose.allBase())
-    implementation(project(mapOf("path" to ":data:routing:models")))
+    implementation(Deps.Accompanist.insets)
 }

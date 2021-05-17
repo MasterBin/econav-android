@@ -36,8 +36,8 @@ fun AppTheme(
 //        )
 
         systemUiController.setNavigationBarColor(
-            color = colors.surface,
-            darkIcons = !darkTheme
+            color = Color.Transparent,
+            darkIcons = true
         )
     }
 }

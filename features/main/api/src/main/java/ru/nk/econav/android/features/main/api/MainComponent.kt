@@ -2,6 +2,7 @@ package ru.nk.econav.android.features.main.api
 
 import androidx.compose.ui.Modifier
 import ru.nk.econav.android.core.mapinterface.GetMapInterface
+import ru.nk.econav.android.features.navigation.api.NavigationComponent
 import ru.nk.econav.android.features.place_details.api.PlaceDetailsComponent
 import ru.nk.econav.android.general.api.GeneralComponent
 import ru.nk.econav.core.common.decompose.AppComponentContext
@@ -14,6 +15,7 @@ interface MainComponent {
     interface Children {
         val general : GeneralComponent.Factory
         val placeDetails : PlaceDetailsComponent.Factory
+        val navigation : NavigationComponent.Factory
     }
 
     interface Dependencies {

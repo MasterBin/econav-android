@@ -49,13 +49,22 @@ class UserLocationComponentImpl(
         requestPermissions()
     }
 
+    private fun getLocationInterface() {
+        componentScope.launch {
+            mapInterface.getLocationInterface().collect {
+                locationInterface = it
+                initLocationInterface(it)
+            }
+        }
+    }
+
     private fun initLocationInterface(locationInterface: MyLocationInterface) {
         val locationProvider = GpsMyLocationProvider(applicationContext)
 
         locationProvider.startLocationProvider { location, source ->
             userLocation.invoke(LatLon(location.latitude, location.longitude))
         }
-        
+
         lifecycle.subscribe(
             onPause = {
                 locationProvider.stopLocationProvider()
@@ -78,15 +87,6 @@ class UserLocationComponentImpl(
         locationInterface.enableFollowLocation()
         locationInterface.getMyLocation()?.let{
             userLocation.invoke(LatLon(it.latitude, it.longitude))
-        }
-    }
-
-    private fun getLocationInterface() {
-        componentScope.launch {
-            mapInterface.getLocationInterface().collect {
-                locationInterface = it
-                initLocationInterface(it)
-            }
         }
     }
 

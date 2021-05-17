@@ -12,7 +12,7 @@ interface MapInterface {
     fun remove(overlay : Overlay)
     fun invalidateMap()
     fun zoomToBoundingBox(box : BoundingBox, animated : Boolean = true)
-    fun moveToPoint(point : GeoPoint)
+    fun moveToPoint(point : GeoPoint, zoom : Double? = null)
 
     fun getLocationInterface() : Flow<MyLocationInterface>
     fun setMapCenterOffset(x : Int, y : Int)

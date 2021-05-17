@@ -1,16 +1,12 @@
 package ru.nk.econav.android.features.place_details.impl
 
-import android.location.Location
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.channels.BufferOverflow
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.reduce
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.nk.econav.android.data.routing.models.Route
 import ru.nk.econav.android.eco_param_elector.api.EcoParamElector
@@ -20,11 +16,9 @@ import ru.nk.econav.android.routing.api.RoutingComponent
 import ru.nk.econav.android.userlocation.UserLocationComponent
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
-import ru.nk.econav.core.common.decompose.OneChild
 import ru.nk.econav.core.common.decompose.oneChild
 import ru.nk.econav.core.common.models.LatLon
 import ru.nk.econav.core.common.util.OutEvent
-import ru.nk.econav.ui.components.DraggableBottomDrawer
 
 class PlaceDetailsComponentImpl(
     private val appComponentContext: AppComponentContext,
@@ -49,11 +43,11 @@ class PlaceDetailsComponentImpl(
             })
     }
 
-    private val ecoParamFlow = MutableSharedFlow<Float>(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
+    private val ecoParamFlow = MutableStateFlow(0f)
     private val requestRoute = MutableSharedFlow<RouteReq>()
+
+    private val _state = MutableValue(State())
+    val model: Value<State> = _state
 
     private val routingComponent = oneChild("routing") {
         children.routing.invoke(
@@ -94,87 +88,29 @@ class PlaceDetailsComponentImpl(
         }
     }
 
-    fun displayRouteDetails(route: Route) {
-        //TODO
+    private val mapInterface = getMapInterface(lifecycle)
+
+    fun setMapOffset(offset: Int) {
+        mapInterface.setMapCenterOffset(
+            0,
+            (-offset / applicationContext.resources.displayMetrics.density).toInt()
+        )
     }
 
-}
-
-@Composable
-fun PlaceDetails(
-    modifier: Modifier = Modifier,
-    component: PlaceDetailsComponentImpl
-) {
-    DraggableBottomDrawer(
-        modifier = modifier,
-        drawerRatio = 0.3f,
-        onDrawerContent = {
-            OnDrawer(component = component)
-        },
-        drawerContent = {
-            DrawerContent(component = component)
-        }
-    )
-}
-
-@Composable
-fun DrawerContent(
-    component: PlaceDetailsComponentImpl
-) {
-    Column {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            Column(modifier = Modifier.wrapContentWidth(Alignment.Start)) {
-                Text(
-                    text = component.place.name,
-                    style = MaterialTheme.typography.h5
-                )
-                Text(
-                    text = component.place.address,
-                    style = MaterialTheme.typography.subtitle1
-                )
-            }
-            Text(
-                text = component.place.distanceTo ?: "",
-                style = MaterialTheme.typography.h5
+    fun displayRouteDetails(route: Route) {
+        _state.reduce {
+            State(
+                route
             )
         }
     }
-}
 
-@Composable
-fun OnDrawer(
-    component: PlaceDetailsComponentImpl
-) {
-    Box(
-        Modifier
-            .fillMaxSize()
-            .padding(bottom = 16.dp)
-    ) {
-        Column(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-        ) {
-            Box(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
-                OneChild(state = component.userLocationComponent.state) {
-                    it.instance
-                        .render(
-                            Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp)
-                        )
-                        .invoke()
-                }
-            }
-
-            OneChild(state = component.ecoParamElector.state) {
-                it.instance.renderer(Modifier.fillMaxWidth())
-                    .invoke()
-            }
-        }
+    fun routeToClicked() {
+        model.value.route?.let { navigateTo.invoke(it) }
     }
+
+    data class State(
+        val route: Route? = null
+    )
 }
+

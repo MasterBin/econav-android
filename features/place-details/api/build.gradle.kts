@@ -7,7 +7,7 @@ dependencies {
     moduleDep(Modules.Core.mapInterface)
 
     moduleDep(Modules.Data.Places.models)
-
+    moduleDep(Modules.Data.Routing.models)
 
     moduleDep(Modules.Features.userLocation)
     moduleDep(Modules.Features.routing)

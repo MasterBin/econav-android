@@ -18,5 +18,6 @@ val modules = listOf(
     moduleUserLocation,
     moduleGeneral,
     moduleSearchPlaces,
-    modulePlaceDetails
+    modulePlaceDetails,
+    moduleNavigation,
 )

@@ -40,4 +40,7 @@ dependencies {
 
     moduleDep(Modules.Features.placeDetail)
     moduleDep(ModulesUnsafe.Features.placeDetail)
+
+    moduleDep(Modules.Features.navigation)
+    moduleDep(ModulesUnsafe.Features.navigation)
 }

@@ -22,14 +22,6 @@ class InnerMapComponent(
     private val componentContext: AppComponentContext
 ) : AppComponentContext by componentContext {
 
-    init {
-        lifecycle.subscribe(
-            onDestroy = {
-                componentScope.cancel()
-            }
-        )
-    }
-
     val overlaysFlow = MutableStateFlow<List<Overlay>>(listOf())
     val invalidateMapFlow = MutableSharedFlow<Unit>()
     val boundingBoxZoom = MutableSharedFlow<Pair<BoundingBox, Boolean>>(
@@ -39,9 +31,9 @@ class InnerMapComponent(
     val getLocationOverlay = MutableSharedFlow<Unit>()
     val locationFlow = MutableSharedFlow<MyLocationNewOverlay>(
         replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    val animateTo = MutableSharedFlow<GeoPoint>(
+    val animateTo = MutableSharedFlow<Pair<GeoPoint, Double?>>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -71,6 +63,8 @@ class InnerMapComponent(
                 componentScope.launch {
                     overlaysFlow.emit(overlaysFlow.value.minus(interactor.mutableOverlays))
                 }
+                componentScope.launch { invalidateMapFlow.emit(Unit) }
+                interactor.setMapCenterOffset(0,0)
                 lifecycle.unsubscribe(this)
             }
         }
@@ -109,9 +103,9 @@ class InnerMapComponent(
             }
         }
 
-        override fun moveToPoint(point: GeoPoint) {
+        override fun moveToPoint(point: GeoPoint, zoom : Double?) {
             componentScope.launch {
-                animateTo.emit(point)
+                animateTo.emit(point to zoom)
             }
         }
 

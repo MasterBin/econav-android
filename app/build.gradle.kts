@@ -77,10 +77,6 @@ android {
     }
 }
 
-androidComponents {
-
-}
-
 dependencies {
 //    implementation(platform(Deps.Firebase.bom))
 //    implementation(Deps.Firebase.crashlytics)
@@ -88,6 +84,7 @@ dependencies {
 
     moduleDep(Modules.Core.common)
     moduleDep(Modules.Core.ui)
+    moduleDep(Modules.Core.resources)
     moduleDep(Modules.Features.map)
     moduleDep(ModulesUnsafe.di)
 

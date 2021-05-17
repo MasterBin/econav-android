@@ -1,9 +1,12 @@
 package ru.nk.econav.android
 
 import android.os.Bundle
+import android.os.Handler
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             InstanceKeeper(viewModelStore),
             BackPressedDispatcher(onBackPressedDispatcher)
         )
+
 
         setContent {
             AppTheme {

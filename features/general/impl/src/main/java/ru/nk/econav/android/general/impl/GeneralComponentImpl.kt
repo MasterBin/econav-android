@@ -1,8 +1,9 @@
 package ru.nk.econav.android.general.impl
 
-import android.location.Location
 import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.lifecycle.subscribe
+import com.arkivanov.decompose.statekeeper.consume
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,10 +14,10 @@ import ru.nk.econav.android.general.api.GeneralComponent
 import ru.nk.econav.android.userlocation.UserLocationComponent
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
-import ru.nk.econav.core.common.decompose.childContext
 import ru.nk.econav.core.common.decompose.oneChild
 import ru.nk.econav.core.common.models.LatLon
 import ru.nk.econav.core.common.util.OutEvent
+import ru.nk.econav.ui.components.DraggableBottomDrawerState
 
 class GeneralComponentImpl(
     private val appComponentContext: AppComponentContext,
@@ -40,7 +41,6 @@ class GeneralComponentImpl(
             })
     }
 
-
     private val userLocationFlow = MutableSharedFlow<LatLon>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -54,12 +54,6 @@ class GeneralComponentImpl(
     }
 
     private val mapInterface = getMapInterface.invoke(lifecycle)
-
-    init {
-        lifecycle.subscribe(onDestroy = {
-            setMapOffset(0)
-        })
-    }
 
     fun featureSelected(geoFeature: GeoFeature) {
         placeSelected.invoke(geoFeature)

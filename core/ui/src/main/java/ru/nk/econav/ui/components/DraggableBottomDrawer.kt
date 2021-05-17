@@ -1,5 +1,6 @@
 package ru.nk.econav.ui.components
 
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlinx.parcelize.Parcelize
 import ru.nk.econav.android.core.resources.R
 import ru.nk.econav.ui.components.DraggableBottomDrawerState.*
 import kotlin.math.roundToInt
@@ -37,6 +39,7 @@ fun DraggableBottomDrawer(
     hidden: Boolean = false,
     swipeableState: SwipeableState<DraggableBottomDrawerState> = rememberSwipeableState(General),
     drawerRatio: Float = 0.5f,
+    freeze : Boolean = false,
     drawerContent: @Composable () -> Unit = @Composable {},
     drawerContentExpanded: @Composable () -> Unit = @Composable {},
     onDrawerContent: @Composable () -> Unit = @Composable {}
@@ -52,11 +55,17 @@ fun DraggableBottomDrawer(
             peekHeight.toPx()
         }
 
-        val anchors = mapOf(
-            0f to Expanded,
-            (fullHeight * drawerRatioInner) to General,
-            (fullHeight - peekHeightPx) to Hidden
-        )
+        val anchors = if (freeze) {
+            mapOf(
+                (fullHeight * drawerRatioInner) to General,
+            )
+        } else {
+            mapOf(
+                0f to Expanded,
+                (fullHeight * drawerRatioInner) to General,
+                (fullHeight - peekHeightPx) to Hidden
+            )
+        }
 
         val swipeableModifier = Modifier.swipeable(
             state = swipeableState,
@@ -131,7 +140,6 @@ fun DraggableBottomDrawer(
                             Box(
                                 Modifier.fillMaxSize()
                             ) {
-
                                 Crossfade(targetState = swipeableState.offset.value >= fullHeight * drawerRatioInner) {
                                     if (it) {
                                         drawerContent()
@@ -148,6 +156,6 @@ fun DraggableBottomDrawer(
     }
 }
 
-enum class DraggableBottomDrawerState() {
+enum class DraggableBottomDrawerState {
     Hidden, General, Expanded
 }

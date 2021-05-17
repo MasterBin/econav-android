@@ -31,7 +31,8 @@ class RoutingRepositoryImpl(
                 to = end,
                 polyline = PolylineUtil.decode(res.encodedRoute),
                 distance = res.distance,
-                time = res.time
+                time = res.time,
+                instructions = res.instructions
             )
         }
 }

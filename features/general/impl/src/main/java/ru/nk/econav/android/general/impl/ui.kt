@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.rememberSwipeableState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.extensions.compose.jetpack.asState
+import com.arkivanov.decompose.value.reduce
 import kotlinx.coroutines.launch
 import ru.nk.econav.core.common.decompose.OneChild
 import ru.nk.econav.ui.components.DraggableBottomDrawer
@@ -47,13 +50,20 @@ fun General(
     )
 }
 
+
 @Composable
 fun DrawerContentExpanded(
     component: GeneralComponentImpl
 ) {
+    val focusRequester = FocusRequester()
+
     OneChild(state = component.searchPlacesComponent.state) {
+        SideEffect {
+            focusRequester.requestFocus()
+        }
+
         it.instance.render(
-            Modifier.fillMaxSize()
+            Modifier.fillMaxSize().focusRequester(focusRequester = focusRequester)
         ).invoke()
     }
 }
@@ -65,6 +75,7 @@ fun DrawerContent(
     swipeableState: SwipeableState<DraggableBottomDrawerState>
 ) {
     val scope = rememberCoroutineScope()
+
 
     Column(
         modifier = Modifier

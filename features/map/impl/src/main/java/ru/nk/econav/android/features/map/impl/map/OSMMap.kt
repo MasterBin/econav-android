@@ -21,10 +21,15 @@ import org.osmdroid.events.DelayedMapListener
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
+import org.osmdroid.gpkg.overlay.features.PolylineMarkers
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
+import org.osmdroid.views.drawing.OsmPath
+import org.osmdroid.views.overlay.FolderOverlay
+import org.osmdroid.views.overlay.Overlay
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import ru.nk.econav.android.features.map.impl.R
@@ -53,10 +58,15 @@ fun OsmMap(
 
             //FIXME: overlays overlap problem
             mapView.apply {
+                val folderOverlay = FolderOverlay()
+                overlays.add(folderOverlay)
+
                 scope.launch {
-                    component.overlaysFlow.collect {
-                        overlays.removeAll(overlays.subtract(it))
-                        overlays.addAll(it.subtract(overlays))
+                    component.overlaysFlow.collect { lst ->
+                        folderOverlay.items.let {
+                            it.removeAll(it.subtract(lst))
+                            it.addAll(lst.subtract(it))
+                        }
                     }
                 }
                 scope.launch {
@@ -77,8 +87,12 @@ fun OsmMap(
                     }
                 }
                 scope.launch {
-                    component.animateTo.collect {
-                        controller.animateTo(it)
+                    component.animateTo.collect { g ->
+                        if (g.second != null) {
+                            controller.animateTo(g.first, g.second, 1000L)
+                        } else {
+                            controller.animateTo(g.first)
+                        }
                     }
                 }
 

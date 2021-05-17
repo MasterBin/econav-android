@@ -12,9 +12,9 @@ fun <I, O> AppComponentContext.activityResult(
 ) : ActivityResultLauncher<I> {
     val activityResultLauncher = activityResultRegistry.register(key, contract, callback)
 
-    lifecycle.subscribe(onDestroy = {
-        activityResultLauncher.unregister()
-    })
+//    lifecycle.subscribe(onDestroy = {
+//        activityResultLauncher.unregister()
+//    })
 
     return activityResultLauncher
 }

@@ -2,4 +2,6 @@
 <resources>
     <string name="search">Поиск</string>
     <string name="ecology_of_route">Экологичность маршрута</string>
+    <string name="back_button_exit_text">Нажмите еще раз для выхода</string>
+    <string name="route_to">Маршрут к</string>
 </resources>
