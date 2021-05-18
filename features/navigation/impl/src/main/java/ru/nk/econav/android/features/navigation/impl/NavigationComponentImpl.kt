@@ -3,7 +3,7 @@ package ru.nk.econav.android.features.navigation.impl
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import org.osmdroid.util.BoundingBox
+import com.arkivanov.decompose.value.reduce
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.OverlayItem
@@ -69,9 +69,53 @@ class NavigationComponentImpl(
     }
 
     private val _model = MutableValue(Model(route.instructions.first()))
-    val model : Value<Model> = _model
+    val model: Value<Model> = _model
 
     private fun onUserLocationChanged(location: LatLon) {
+        val point = GeoPoint(location.lat, location.lon)
+
+        val polylinePoint =
+            polyline.actualPoints.minByOrNull { it.distanceToAsDouble(point) } ?: return
+        val distance = polylinePoint.distanceToAsDouble(point)
+
+        if (distance < 20) {
+            val index = polyline.actualPoints.indexOf<GeoPoint>(polylinePoint)
+            polyline.setPoints(
+                listOf(point) + polyline.actualPoints.minus(
+                    polyline.actualPoints.subList(
+                        0,
+                        index + 1
+                    )
+                )
+            )
+
+            val nextInstruction = route.instructions.minByOrNull {
+                val s = it.points.minByOrNull { GeoPoint(it.lat, it.lon).distanceToAsDouble(polylinePoint) < 20 } ?: error("")
+                GeoPoint(s.lat, s.lon).distanceToAsDouble(polylinePoint)
+            }
+
+            _model.reduce {
+                it.copy(
+                    instruction = nextInstruction!!
+                )
+            }
+//
+//            if (instructionPoint != null) {
+//                val index = route.instructions.indexOf(_model.value.instruction)
+//                val instr = route.instructions.getOrNull(index + 1)
+//
+//                if (instr == null) {
+//                    arrivedAtDestination()
+//                    return
+//                }
+//
+//            }
+        }
+
+        mapInterface.invalidateMap()
+    }
+
+    private fun arrivedAtDestination() {
 
     }
 
@@ -80,7 +124,7 @@ class NavigationComponentImpl(
     }
 
     private fun moveToUserLocation() {
-        mapInterface.moveToPoint(GeoPoint(route.from.lat,route.from.lon), 17.0)
+        mapInterface.moveToPoint(GeoPoint(route.from.lat, route.from.lon), 17.0)
     }
 
     private fun initEndLocation() {
@@ -100,7 +144,7 @@ class NavigationComponentImpl(
     }
 
     data class Model(
-        val instruction : Instruction
+        val instruction: Instruction
     )
 }
 
