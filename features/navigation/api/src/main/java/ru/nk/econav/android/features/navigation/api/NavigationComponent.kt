@@ -16,7 +16,6 @@ interface NavigationComponent {
         val getMapInterface : GetMapInterface
         val route : Route
         val permissionNotGranted : OutEvent<Unit>
-        val noRouteInstructions : OutEvent<Unit>
     }
 
     interface Children {

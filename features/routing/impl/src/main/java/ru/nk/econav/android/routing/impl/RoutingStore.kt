@@ -29,10 +29,7 @@ interface RoutingStore : Store<Intent, State, Label> {
     }
 
     sealed class Label {
-        data class RequestRoute(
-            val startPoint: LatLon,
-            val endPoint: LatLon,
-            val ecoParam : Float
-        ) : Label()
+        object NetworkError : Label()
+        data class TextError(val text : String) : Label()
     }
 }

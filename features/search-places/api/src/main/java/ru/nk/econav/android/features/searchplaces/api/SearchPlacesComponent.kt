@@ -2,6 +2,8 @@ package ru.nk.econav.android.features.searchplaces.api
 
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
 import ru.nk.econav.android.data.places.models.GeoFeature
 import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
@@ -15,6 +17,10 @@ interface SearchPlacesComponent {
     interface Dependencies {
         val userLocationFlow : Flow<LatLon>
         val placeSelected : OutEvent<GeoFeature>
+        val textChanged : OutEvent<String>
+            get() = OutEvent {  }
+        val clearFlow : Flow<Unit>
+            get() = flow {}
     }
 
     fun interface Factory {

@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.asState
 import ru.nk.econav.core.common.decompose.OneChild
 import ru.nk.econav.ui.components.DraggableBottomDrawer
-import ru.nk.econav.ui.components.RoundedButton
+import ru.nk.econav.ui.basic.RoundedButton
 
 @Composable
 fun PlaceDetails(
@@ -50,7 +50,7 @@ fun DrawerContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            Column(modifier = Modifier.weight(3f), horizontalAlignment = Alignment.Start) {
+            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
                 Text(
                     text = component.place.name,
                     style = MaterialTheme.typography.h5
@@ -61,7 +61,7 @@ fun DrawerContent(
                 )
             }
             Column(
-                modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End
+                modifier = Modifier.wrapContentWidth(), horizontalAlignment = Alignment.End
             ) {
                 Text(
                     modifier = Modifier,
@@ -94,6 +94,8 @@ fun DrawerContent(
 fun OnDrawer(
     component: PlaceDetailsComponentImpl
 ) {
+    val model by component.model.asState()
+
     Box(
         Modifier
             .fillMaxSize()
@@ -105,19 +107,21 @@ fun OnDrawer(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            ) {
-                OneChild(state = component.userLocationComponent.state) {
-                    it.instance
-                        .render(
-                            Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp)
-                        )
-                        .invoke()
+            if (model.showUserLocationButton) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    OneChild(state = component.userLocationComponent.state) {
+                        it.instance
+                            .render(
+                                Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .padding(end = 16.dp)
+                            )
+                            .invoke()
+                    }
                 }
             }
 

@@ -17,6 +17,7 @@ import ru.nk.econav.core.common.decompose.AppComponentContext
 import ru.nk.econav.core.common.decompose.Content
 import ru.nk.econav.core.common.decompose.activityResult
 import ru.nk.econav.core.common.models.LatLon
+import ru.nk.econav.core.common.util.invoke
 import ru.nk.econav.ui.components.UserLocationButton
 
 class UserLocationComponentImpl(
@@ -42,6 +43,8 @@ class UserLocationComponentImpl(
             } else {
                 locationInterface?.let { initLocationInterface(it) }
             }
+        } else {
+            permissionNotGranted.invoke()
         }
     }
 

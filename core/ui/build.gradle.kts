@@ -3,7 +3,6 @@ plugins {
 }
 
 dependencies {
-
     moduleDep(Modules.Core.resources)
 
     implementation(Deps.Compose.allBase())

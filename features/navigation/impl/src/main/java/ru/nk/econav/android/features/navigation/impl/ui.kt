@@ -33,15 +33,19 @@ fun Navigation(
             elevation = 4.dp,
             shape = RoundedCornerShape(12.dp)
         ) {
-            InstructionContent(Modifier.padding(8.dp), model.instruction)
+            model.instruction?.let {
+                InstructionContent(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), it)
+            }
         }
 
-        OneChild(state = component.userLocationComponent.state) {
-            it.instance.render(
-                Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(horizontal = 16.dp)
-            ).invoke()
+        if (model.showUserLocationButton) {
+            OneChild(state = component.userLocationComponent.state) {
+                it.instance.render(
+                    Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(horizontal = 16.dp)
+                ).invoke()
+            }
         }
     }
 }

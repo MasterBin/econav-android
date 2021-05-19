@@ -43,4 +43,7 @@ dependencies {
 
     moduleDep(Modules.Features.navigation)
     moduleDep(ModulesUnsafe.Features.navigation)
+
+    moduleDep(Modules.Features.chooseLocation)
+    moduleDep(ModulesUnsafe.Features.chooseLocation)
 }

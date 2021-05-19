@@ -20,6 +20,7 @@ interface SearchPlacesStore : Store<Intent, State, Label> {
     )
 
     sealed class Label {
-
+        object NetworkError : Label()
+        data class TextError(val text : String) : Label()
     }
 }

@@ -12,6 +12,7 @@ import ru.nk.econav.android.data.places.api.PlacesRepository
 import ru.nk.econav.android.data.places.models.GeoFeature
 import ru.nk.econav.android.features.searchplaces.impl.store.SearchPlacesStore.*
 import ru.nk.econav.core.common.models.LatLon
+import ru.nk.econav.core.common.util.open
 
 class SearchPlacesStoreProvider(
     private val storeFactory: StoreFactory,
@@ -45,18 +46,27 @@ class SearchPlacesStoreProvider(
 
             disposableScope.coroutineContext.cancelChildren()
 
-            if (state.searchText.isEmpty())
+            if (state.searchText.isEmpty()) {
+                dispatch(Result.Clear)
                 return
+            }
 
             disposableScope.launch {
-                dispatch(
-                    Result.QueryResultsReceived(
-                        repository.search(
-                            state.searchText,
-                            autoComplete = autoComplete,
-                            userLocation = state.userLocation
-                        ).features
-                    )
+                val res = repository.search(
+                    state.searchText,
+                    autoComplete = autoComplete,
+                    userLocation = state.userLocation
+                )
+                res.open(
+                    {
+                        dispatch(Result.QueryResultsReceived(it.features))
+                    },
+                    {
+                        when(it){
+                            PlacesRepository.Error.NetworkOrServerError -> publish(Label.NetworkError)
+                            is PlacesRepository.Error.TextError -> publish(Label.TextError(it.text))
+                        }
+                    }
                 )
             }
         }
@@ -68,6 +78,7 @@ class SearchPlacesStoreProvider(
                 is Result.QueryResultsReceived -> copy(foundFeatures = res.res)
                 is Result.UserLocationChanged -> copy(userLocation = res.userLocation)
                 is Result.SearchTextChanged -> copy(searchText = res.searchText)
+                is Result.Clear -> copy(foundFeatures = null)
             }
     }
 
@@ -76,6 +87,7 @@ class SearchPlacesStoreProvider(
         data class SearchTextChanged(val searchText: String) : Result()
         data class QueryResultsReceived(val res: List<GeoFeature>) : Result()
         data class UserLocationChanged(val userLocation: LatLon) : Result()
+        object Clear : Result()
     }
 
 }

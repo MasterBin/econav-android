@@ -11,6 +11,7 @@ dependencies {
     moduleDep(Modules.Features.general)
     moduleDep(Modules.Features.placeDetail)
     moduleDep(Modules.Features.navigation)
+    moduleDep(Modules.Features.chooseLocation)
 
     moduleDep(Modules.Data.Places.models)
     moduleDep(Modules.Data.Routing.models)

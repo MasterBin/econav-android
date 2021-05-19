@@ -11,6 +11,7 @@ import ru.nk.econav.android.data.routing.api.RoutingRepository
 import ru.nk.econav.android.data.routing.models.Route
 import ru.nk.econav.android.routing.api.RouteReq
 import ru.nk.econav.android.routing.impl.RoutingStore.*
+import ru.nk.econav.core.common.util.open
 
 class RoutingStoreProvider(
     private val storeFactory: StoreFactory,
@@ -52,7 +53,17 @@ class RoutingStoreProvider(
 
             requestScope.launch {
                 val route = routingRepository.getPath(routeReq.start, routeReq.end, ecoParam)
-                dispatch(Result.ShowRoute(routeReq, route))
+                route.open(
+                    {
+                        dispatch(Result.ShowRoute(routeReq, it))
+                    },
+                    {
+                        when(it) {
+                            RoutingRepository.Error.NetworkOrServerError -> publish(Label.NetworkError)
+                            is RoutingRepository.Error.TextError -> publish(Label.TextError(it.text))
+                        }
+                    }
+                )
             }
         }
     }

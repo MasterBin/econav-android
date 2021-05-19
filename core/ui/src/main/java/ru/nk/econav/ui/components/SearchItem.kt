@@ -18,7 +18,7 @@ fun SearchItem(
     title: String,
     subtitle: String,
     distanceTo: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -34,13 +34,13 @@ fun SearchItem(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                modifier = Modifier.weight(1f).wrapContentWidth(Alignment.Start),
-                text = title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.body2
+
+            GeneralTitle(
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentWidth(Alignment.Start), text = title
             )
+
             Text(
                 modifier = Modifier.wrapContentWidth(Alignment.End),
                 text = distanceTo,
@@ -60,6 +60,18 @@ fun SearchItem(
             )
         )
     }
+}
+
+
+@Composable
+fun GeneralTitle(modifier: Modifier, text: String) {
+    Text(
+        modifier = modifier,
+        text = text,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        style = MaterialTheme.typography.body2
+    )
 }
 
 @Preview

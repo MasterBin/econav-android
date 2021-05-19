@@ -34,6 +34,7 @@ object Modules {
         const val searchPlaces = ":features:search-places:api"
         const val placeDetail = ":features:place-details:api"
         const val navigation = ":features:navigation:api"
+        const val chooseLocation = ":features:choose-location:api"
     }
 }
 
@@ -64,6 +65,7 @@ object ModulesUnsafe {
         const val searchPlaces = ":features:search-places:impl"
         const val placeDetail = ":features:place-details:impl"
         const val navigation = ":features:navigation:impl"
+        const val chooseLocation = ":features:choose-location:impl"
     }
 
 }

@@ -15,6 +15,7 @@ import com.arkivanov.decompose.backpressed.BackPressedDispatcher
 import com.arkivanov.decompose.instancekeeper.InstanceKeeper
 import com.arkivanov.decompose.lifecycle.asDecomposeLifecycle
 import com.arkivanov.decompose.statekeeper.StateKeeper
+import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import ru.nk.econav.android.root.Root
 import ru.nk.econav.android.root.RootComponent
@@ -23,6 +24,7 @@ import ru.nk.econav.ui.theme.AppTheme
 
 class MainActivity : AppCompatActivity() {
 
+    @OptIn(ExperimentalAnimatedInsets::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             AppTheme {
-                ProvideWindowInsets {
+                ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
                     val root = remember {
                         val appComponentContext = DefaultAppComponentContext(
                             componentContext,

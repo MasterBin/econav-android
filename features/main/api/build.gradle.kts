@@ -9,6 +9,7 @@ dependencies {
 
     moduleDep(Modules.Features.placeDetail)
     moduleDep(Modules.Features.navigation)
+    moduleDep(Modules.Features.chooseLocation)
 
     implementation(Deps.Decompose.common)
     implementation(Deps.Compose.base())

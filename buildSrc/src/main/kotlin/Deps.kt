@@ -60,6 +60,7 @@ object Deps {
         const val retrofit = "com.squareup.retrofit2:retrofit:$version"
         const val kotlinSerializationConverter =
             "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+        const val networkResponseAdapter = "com.github.haroldadmin:NetworkResponseAdapter:4.2.1"
 
         fun base() = retrofit
         fun all() = listOf(retrofit, kotlinSerializationConverter)

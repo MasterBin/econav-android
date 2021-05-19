@@ -1,5 +1,7 @@
 package ru.nk.econav.android.routing.impl
 
+import android.widget.Toast
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -94,6 +96,24 @@ class RoutingComponentImpl(
         }
         initEcoParamFlow()
         initRouteRequest()
+        initStoreErrorHandling()
+    }
+
+    private fun initStoreErrorHandling() {
+        componentScope.launch {
+            store.labels.collect {
+                when (it) {
+                    RoutingStore.Label.NetworkError ->
+                        toast(applicationContext.getString(R.string.no_server_connection))
+                    is RoutingStore.Label.TextError ->
+                        toast(it.text)
+                }
+            }
+        }
+    }
+
+    private fun toast(text: String) {
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 
     private fun initEcoParamFlow() {

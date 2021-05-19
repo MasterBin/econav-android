@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import ru.nk.econav.android.data.routing.models.Route
 import ru.nk.econav.android.eco_param_elector.api.EcoParamElector
 import ru.nk.econav.android.features.place_details.api.PlaceDetailsComponent
@@ -34,17 +35,19 @@ class PlaceDetailsComponentImpl(
             it,
             object : UserLocationComponent.Dependencies,
                 PlaceDetailsComponent.Dependencies by this {
-                override val userLocation: OutEvent<LatLon> = OutEvent { location ->
-                    showRoute(location)
+                override val userLocation: OutEvent<LatLon> = OutEvent {
+                    componentScope.launch { userLocationFlow.emit(it) }
                 }
                 override val permissionNotGranted: OutEvent<Unit> = OutEvent {
                     //TODO:
+                    _state.reduce { it.copy(showUserLocationButton = false) }
                 }
             })
     }
 
     private val ecoParamFlow = MutableStateFlow(0f)
     private val requestRoute = MutableSharedFlow<RouteReq>()
+    private val userLocationFlow = MutableStateFlow<LatLon?>(null)
 
     private val _state = MutableValue(State())
     val model: Value<State> = _state
@@ -71,20 +74,19 @@ class PlaceDetailsComponentImpl(
         })
     }
 
-    var routeRequested = false
+    init {
+        showRoute()
+    }
 
-    fun showRoute(location: LatLon) {
+    private fun showRoute() {
         componentScope.launch {
-            if (!routeRequested) {
-                requestRoute.emit(
-                    RouteReq(
-                        start = location,
-                        end = deps.place.center,
-                        isStartFromUserLocation = true
-                    )
+            requestRoute.emit(
+                RouteReq(
+                    start = deps.startLocation,
+                    end = deps.place.center,
+                    isStartFromUserLocation = deps.isStartLocationIsUserLocation
                 )
-                routeRequested = true
-            }
+            )
         }
     }
 
@@ -110,7 +112,8 @@ class PlaceDetailsComponentImpl(
     }
 
     data class State(
-        val route: Route? = null
+        val route: Route? = null,
+        val showUserLocationButton : Boolean = false
     )
 }
 

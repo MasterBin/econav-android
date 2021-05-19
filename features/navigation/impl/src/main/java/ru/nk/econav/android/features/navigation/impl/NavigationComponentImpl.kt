@@ -30,10 +30,13 @@ class NavigationComponentImpl(
             it,
             object : UserLocationComponent.Dependencies, NavigationComponent.Dependencies by this {
                 override val userLocation: OutEvent<LatLon> = OutEvent {
+                    if (!_model.value.showUserLocationButton) {
+                        _model.reduce { it.copy(showUserLocationButton = true) }
+                    }
                     onUserLocationChanged(it)
                 }
                 override val permissionNotGranted: OutEvent<Unit> = OutEvent {
-                    //TODO:
+                    _model.reduce { it.copy(showUserLocationButton = false) }
                 }
             }
         )
@@ -57,9 +60,6 @@ class NavigationComponentImpl(
     )
 
     init {
-        if (route.instructions.isEmpty())
-            noRouteInstructions.invoke()
-
         mapInterface.add(polyline)
         mapInterface.add(overlayPoints)
         drawPolyline()
@@ -68,7 +68,7 @@ class NavigationComponentImpl(
         moveToUserLocation()
     }
 
-    private val _model = MutableValue(Model(route.instructions.first()))
+    private val _model = MutableValue(Model(route.instructions.firstOrNull()))
     val model: Value<Model> = _model
 
     private fun onUserLocationChanged(location: LatLon) {
@@ -94,10 +94,12 @@ class NavigationComponentImpl(
                 GeoPoint(s.lat, s.lon).distanceToAsDouble(polylinePoint)
             }
 
-            _model.reduce {
-                it.copy(
-                    instruction = nextInstruction!!
-                )
+            nextInstruction?.let { inst->
+                _model.reduce {
+                    it.copy(
+                        instruction = inst
+                    )
+                }
             }
 //
 //            if (instructionPoint != null) {
@@ -144,7 +146,8 @@ class NavigationComponentImpl(
     }
 
     data class Model(
-        val instruction: Instruction
+        val instruction: Instruction?,
+        val showUserLocationButton : Boolean = false
     )
 }
 

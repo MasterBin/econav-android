@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import ru.nk.econav.ui.basic.RoundedButton
 import ru.nk.econav.ui.components.*
 import ru.nk.econav.ui.theme.AppTheme
 import kotlin.math.roundToInt

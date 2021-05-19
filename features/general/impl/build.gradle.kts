@@ -5,6 +5,7 @@ plugins {
 dependencies {
     moduleDep(Modules.Core.common)
     moduleDep(Modules.Core.ui)
+    moduleDep(Modules.Core.resources)
 
     moduleDep(Modules.Core.mapInterface)
     moduleDep(Modules.Features.userLocation)
@@ -15,4 +16,5 @@ dependencies {
     implementation(Deps.MVIKotlin.base())
     implementation(Deps.OSMDroid.osm)
     implementation(Deps.Compose.allBase())
+    implementation(Deps.Accompanist.insets)
 }

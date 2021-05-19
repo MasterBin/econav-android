@@ -1,5 +1,6 @@
 package ru.nk.econav.android.core.network.impl
 
+import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -29,6 +30,7 @@ fun createRetrofit() : Retrofit =
                 ignoreUnknownKeys = true
             }.asConverterFactory("application/json".toMediaType())
         )
+        .addCallAdapterFactory(NetworkResponseAdapterFactory())
         .build()
 
 fun createOkhttpClient() : OkHttpClient =

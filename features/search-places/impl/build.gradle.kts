@@ -13,4 +13,5 @@ dependencies {
     implementation(Deps.Decompose.composeVariant())
     implementation(Deps.MVIKotlin.base())
     implementation(Deps.Compose.allBase())
+    implementation(Deps.Accompanist.insets)
 }
