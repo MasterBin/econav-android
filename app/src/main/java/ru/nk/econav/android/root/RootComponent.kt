@@ -26,7 +26,6 @@ class RootComponent(
         getKoin().get<MapComponent.Factory>().invoke(it)
     }
 
-
     val mapComponentState = mapComponent.state
 }
 

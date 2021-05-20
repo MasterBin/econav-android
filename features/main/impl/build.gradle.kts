@@ -22,3 +22,4 @@ dependencies {
     implementation(Deps.Compose.allBase())
     implementation(Deps.Accompanist.insets)
 }
+

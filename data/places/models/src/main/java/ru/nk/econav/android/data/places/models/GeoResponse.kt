@@ -25,8 +25,8 @@ data class GeoFeature(
 @Serializable
 @Parcelize
 data class BoundingBox(
-    val east : Double,
-    val north : Double,
-    val west : Double,
-    val south : Double
+    @SerialName("east") val east : Double,
+    @SerialName("north") val north : Double,
+    @SerialName("west") val west : Double,
+    @SerialName("south") val south : Double
 ) : Parcelable

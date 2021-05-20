@@ -26,3 +26,4 @@ data class BoundingBoxUpdate(
 )
 
 typealias GetMapInterface = (lifecycle : Lifecycle) -> MapInterface
+

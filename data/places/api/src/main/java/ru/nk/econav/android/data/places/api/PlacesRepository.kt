@@ -13,3 +13,4 @@ interface PlacesRepository {
         data class TextError(val text : String) : Error()
     }
 }
+

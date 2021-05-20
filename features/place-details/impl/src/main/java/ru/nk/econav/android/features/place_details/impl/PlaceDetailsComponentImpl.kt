@@ -37,6 +37,7 @@ class PlaceDetailsComponentImpl(
                 PlaceDetailsComponent.Dependencies by this {
                 override val userLocation: OutEvent<LatLon> = OutEvent {
                     componentScope.launch { userLocationFlow.emit(it) }
+                    _state.reduce { it.copy(showUserLocationButton = true) }
                 }
                 override val permissionNotGranted: OutEvent<Unit> = OutEvent {
                     //TODO:

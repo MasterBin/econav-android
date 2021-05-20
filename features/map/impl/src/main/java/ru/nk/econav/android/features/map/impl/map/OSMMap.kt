@@ -56,7 +56,6 @@ fun OsmMap(
 
             mapView.translateBoundingBox(component)
 
-            //FIXME: overlays overlap problem
             mapView.apply {
                 val folderOverlay = FolderOverlay()
                 overlays.add(folderOverlay)
@@ -137,12 +136,6 @@ private fun rememberMapView(): MapView {
             setTileSource(TileSourceFactory.MAPNIK)
 
             isTilesScaledToDpi = true
-
-//            if (darkMode) {
-//                overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS)
-//            } else {
-//                overlayManager.tilesOverlay.setColorFilter(null)
-//            }
 
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)

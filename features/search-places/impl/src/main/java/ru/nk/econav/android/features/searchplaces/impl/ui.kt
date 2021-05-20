@@ -44,7 +44,7 @@ fun SearchPlaces(
         }
 
         model.foundFeatures?.let { lst ->
-            LazyColumn(Modifier.imePadding()) {
+            LazyColumn {
                 items(
                     items = lst,
                     key = { it.hashCode() },
