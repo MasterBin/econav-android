@@ -8,7 +8,7 @@ Econav is an application based on modern android development stack in which auth
 - Component based architecture with navigation ([Decompose](https://github.com/arkivanov/Decompose))
 </p>
 
-> ❌ Doesn't work without a backend server. You can try to build and run, but it's not worth it (trust me).
+> ❌ Doesn't work without a [backend server](https://github.com/MasterBin/econav). You can try to build and run the app, but it's not worth it (trust me).
 <p>
 <img src="https://user-images.githubusercontent.com/30437684/127818878-46e448c4-7233-44e7-a22c-662addfccc75.jpg" align="center" width="33%"/>
 <img src="https://user-images.githubusercontent.com/30437684/127818970-7c2d3c4b-54ba-4faa-8461-e529dfc1a6da.jpg" align="center" width="33%"/>
