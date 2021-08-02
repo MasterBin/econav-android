@@ -28,7 +28,7 @@ Econav is an application based on modern android development stack in which auth
 ## Components structure
 ![Untitled Diagram2](https://user-images.githubusercontent.com/30437684/127818434-5fd9f552-5c93-4222-a932-64141ea5a325.png)
 
-## Gradle module structure scheme
+## Gradle modules structure scheme
 ![Untitled Diagram](https://user-images.githubusercontent.com/30437684/127818462-4b071f49-9e9e-4bb4-9cc4-0ce666510914.png)
 
 
